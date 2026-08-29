@@ -1,6 +1,6 @@
+public class Play {
 import java.util.Scanner;
 
-public class Play {
     public static void start() {
         Scanner scanner = new Scanner(System.in);
         int opcao = 0;
