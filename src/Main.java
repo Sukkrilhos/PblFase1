@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        // 1. Instancia o Banco de Dados (Repository)
+        //  Instancia o Banco de Dados (Repository)
         PersonagemRepository repository = new PersonagemRepository();
 
         // 2. Instancia as Regras de Negócio (Service), passando o Repository
