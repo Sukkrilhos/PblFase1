@@ -1,7 +1,7 @@
 public class Dialogos {
 
     public void mostrarMenuPrincipal() {
-        System.out.println("\n===== Ponto Zero =====");
+        System.out.println("\n===== REAÇÃO EM CADEIA =====");
         System.out.println("1 - Novo Jogo");
         System.out.println("2 - Instruções");
         System.out.println("3 - Créditos");
@@ -26,7 +26,6 @@ public class Dialogos {
         System.out.println("========================================================");
         System.out.println("Projeto PBL - EXA863");
         System.out.println("Arquitetura MVC baseada em Java");
-        System.out.println("Desenvolvido por:\n Matheus de Almeida Muniz Rodrigues\n Gustavo Silva Ribeiro");
         System.out.println("========================================================\n");
     }
 
@@ -161,74 +160,6 @@ public class Dialogos {
             System.out.println("\nVocê se tornou um escravo da própria bancada. O lucro explodiu, mas sua saúde entrou em colapso total.");
         } else {
             System.out.println("\nVocê manteve o controle do ritmo de trabalho, mas plantou um inimigo perigoso que agora monitora cada passo seu.");
-        }
-    }
-    // =========================================================================
-    // TEMPORADA 4: DIÁLOGOS E INTERAÇÕES
-    // =========================================================================
-
-    public void mostrarCenaFundoFalsoParte1(String nome) {
-        System.out.println("\n=== CAPÍTULO 7: O Fundo Falso ===");
-        System.out.println("Enquanto arrumava o armário do quarto, Marisa encontrou uma tábua solta no piso.");
-        System.out.println("Lá dentro, há uma mochila abarrotada de notas de dinheiro vivo e uma arma de fogo.");
-        System.out.println("\nMARISA: — " + nome + "! O que é isso?! Dinheiro sujo? Uma arma?! Com quem você está se metendo?!");
-        System.out.println("\nComo você lida com o flagrante?");
-        System.out.println("1 - Tentar manipular a situação, dizendo que é dinheiro de uma consultoria legal e que a arma é por segurança.");
-        System.out.println("2 - Desabar parcialmente, confessando que fez tudo pela família mas exigindo silêncio absoluto.");
-        System.out.print("Sua escolha: ");
-    }
-
-    public void mostrarCenaFundoFalsoParte2(int escolhaAnterior) {
-        if (escolhaAnterior == 1) {
-            System.out.println("\nMarisa percebe que você está mentindo na cara dura. A confiança dela em você morre neste exato momento.");
-        } else {
-            System.out.println("\nEla chora copiosamente, horrorizada com o monstro em que você se transformou. O respeito sumiu.");
-        }
-    }
-
-    public void mostrarCenaEncruzilhadaParte1(String nome) {
-        System.out.println("\n=== CAPÍTULO 8: O Cerco ==ppm");
-        System.out.println("O cerco final se fechou. Heitor está na cola das evidências na Polícia Federal,");
-        System.out.println("e os capangas de 'O Fidalgo' descobriram a localização do porão e querem eliminar você.");
-        System.out.println("\nVALTER: — Acabou o tempo. Não dá mais para esconder de ninguém.");
-        System.out.println("\nQual será o seu último passo antes do colapso?");
-        System.out.println("1 - Tentar empacotar o que sobrou do dinheiro, comprar identidades falsas e fugir do país.");
-        System.out.println("2 - Aceitar o fim, ficar para trás e armar um plano explosivo para destruir o cartel de vez.");
-        System.out.print("Sua escolha: ");
-    }
-    // =========================================================================
-    // TEMPORADA 5: DESFECHOS FINAIS (ROTA B E ROTA C)
-    // =========================================================================
-
-    public void mostrarCenaFuga() {
-        System.out.println("\n========================================================");
-        System.out.println("CAPÍTULO 10: Sangue no Tapete (ROTA B - A QUEDA)");
-        System.out.println("========================================================");
-        System.out.println("Você tentou fugir, mas foi interceptado. Os assassinos do Cartel invadiram a casa.");
-        System.out.println("Tentando proteger o dinheiro, você levou um tiro fatal no abdômen.");
-        System.out.println("Heitor arromba a porta com a polícia apenas para encontrar você sangrando no chão da sala.");
-        System.out.println("Sua família sobreviveu, mas perdeu tudo: o dinheiro, a honra e você.");
-        System.out.println("O crime não compensou.");
-        System.out.println("========================================================\n");
-    }
-
-    public void mostrarCenaAtaque() {
-        System.out.println("\n========================================================");
-        System.out.println("CAPÍTULO 10: Reação em Cadeia (ROTA C - A VINGANÇA)");
-        System.out.println("========================================================");
-        System.out.println("Você usou seu gênio químico uma última vez. Com um explosivo no porta-malas,");
-        System.out.println("você detonou o galpão inteiro, aniquilando todos os seus inimigos de uma só vez.");
-        System.out.println("Gravemente ferido por estilhaços, você caminha pelo laboratório destruído,");
-        System.out.println("toca no maquinário perfeito, sorri e dá seu último suspiro antes da polícia chegar.");
-        System.out.println("O dinheiro está seguro para Marisa e Enzo. Você venceu. Mas perdeu sua alma.");
-        System.out.println("========================================================\n");
-    }
-
-    public void mostrarCenaEncruzilhadaParte2(int escolhaAnterior) {
-        if (escolhaAnterior == 1) {
-            System.out.println("\nVocê corre contra o tempo para arrumar as malas. A rota da fuga está traçada, mas o perigo está na porta.");
-        } else {
-            System.out.println("\nVocê acende um cigarro com as mãos firmes. Não há mais fuga. É hora de acertar as contas.");
         }
     }
 }

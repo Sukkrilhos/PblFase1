@@ -1,6 +1,8 @@
+import javax.swing.*;
+
 public class Main {
     public static void main(String[] args) {
-        //  Instancia o Banco de Dados (Repository)
+        // 1. Instancia o Banco de Dados (Repository)
         PersonagemRepository repository = new PersonagemRepository();
 
         // 2. Instancia as Regras de Negócio (Service), passando o Repository

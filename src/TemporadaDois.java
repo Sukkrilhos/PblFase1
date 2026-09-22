@@ -15,13 +15,13 @@ public class TemporadaDois {
         dialogos.mostrarMensagem("\n========================================================");
         dialogos.mostrarMensagem("       TEMPORADA 2: A AMEAÇA NO RETROVISOR");
         dialogos.mostrarMensagem("========================================================");
-        pausarParaLeitura();
 
-        // --- CAPÍTULO 3: O Furgão Encurralado ---
+        // --- Cena 1: O Furgão Encurralado ---
         dialogos.mostrarCenaFurgaoEncurraladoParte1(valter.getNome());
-        int escolhaFurgao = lerInteiroSeguro(); // Lê a única escolha do capítulo
+        int fala1 = lerInteiroSeguro();
 
-        dialogos.mostrarCenaFurgaoEncurraladoParte2(escolhaFurgao); // Mostra o resultado baseado na escolha
+        dialogos.mostrarCenaFurgaoEncurraladoParte2(fala1);
+        int escolhaFurgao = lerInteiroSeguro();
 
         if (escolhaFurgao == 1) {
             personagemService.aplicarConsequencia(-2000, 0, -10, 0);
@@ -34,11 +34,12 @@ public class TemporadaDois {
         if (personagemService.isGameOver()) return true;
         pausarParaLeitura();
 
-        // --- CAPÍTULO 4: O Sangue na Pia ---
+        // --- Cena 2: O Sangue na Pia ---
         dialogos.mostrarCenaSanguePiaParte1(valter.getNome());
-        int escolhaPia = lerInteiroSeguro(); // Lê a única escolha do capítulo 4
+        int fala2 = lerInteiroSeguro();
 
-        dialogos.mostrarCenaSanguePiaParte2(escolhaPia); // Mostra o resultado baseado na escolha
+        dialogos.mostrarCenaSanguePiaParte2(fala2);
+        int escolhaPia = lerInteiroSeguro();
 
         if (escolhaPia == 1) {
             personagemService.aplicarConsequencia(0, +10, -5, +10);
@@ -49,8 +50,6 @@ public class TemporadaDois {
         }
 
         if (personagemService.isGameOver()) return true;
-
-        dialogos.mostrarMensagem("\n[Fim da Temporada 2]");
         pausarParaLeitura();
 
         return false;

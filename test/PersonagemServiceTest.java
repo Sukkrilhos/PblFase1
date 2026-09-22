@@ -4,70 +4,56 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonagemServiceTest {
 
-    private PersonagemService personagemService;
-    private PersonagemRepository personagemRepository;
+    private PersonagemRepository repository;
+    private PersonagemService service;
 
+    // Configura um ambiente limpo antes de cada teste
     @BeforeEach
     public void setUp() {
-        // Inicializa as dependências antes de cada teste para garantir um estado limpo
-        personagemRepository = new PersonagemRepository();
-        personagemService = new PersonagemService(personagemRepository);
-        personagemService.inicializarValter();
+        repository = new PersonagemRepository();
+        service = new PersonagemService(repository);
     }
 
     @Test
-    public void testInicializacaoDoPersonagem() {
-        Personagem p = personagemService.getPersonagem();
+    public void deveCriarESalvarPersonagemComSucesso() {
+        // Execução
+        Personagem p = service.criarPersonagem("Arthur", 35);
 
-        // Verifica se o personagem foi criado corretamente
-        assertNotNull(p, "O personagem não deveria ser nulo após a inicialização");
-        assertEquals("Valter", p.getNome(), "O nome inicial padrão deve ser Valter");
-
-        // Verifica se os atributos vitais começam cheios (supondo base 100 para Saúde e Relação)
-        assertTrue(p.getSaude() > 0, "A saúde inicial deve ser maior que 0");
-        assertTrue(p.getRelacaoFamiliar() > 0, "A relação familiar inicial deve ser maior que 0");
+        // Verificações
+        assertNotNull(p);
+        assertEquals("Arthur", p.getNome());
+        assertEquals(35, p.getIdade());
+        assertEquals(p, repository.buscar(), "O personagem deve estar salvo no repository.");
     }
 
     @Test
-    public void testAplicarConsequenciaCenarioPositivo() {
-        Personagem p = personagemService.getPersonagem();
-        int dinheiroInicial = p.getDinheiro();
-        int moralInicial = p.getMoralEtica();
+    public void deveAdicionarPontoCalculistaQuandoEscolhaForUm() {
+        // Cenário
+        service.criarPersonagem("Arthur", 35);
 
-        // Simula uma escolha que dá lucro, mas custa moral (Ex: Aceitar a proposta de Kadu)
-        personagemService.aplicarConsequencia(5000, 0, -30, 0);
+        // Execução
+        service.registrarEscolha(1);
 
-        assertEquals(dinheiroInicial + 5000, p.getDinheiro(), "O dinheiro deveria aumentar em 5000");
-        assertEquals(moralInicial - 30, p.getMoralEtica(), "A moral deveria cair 30 pontos");
+        // Verificações
+        Personagem p = service.getPersonagem();
+        assertEquals(1, p.getPontosCalculista());
+        assertEquals(0, p.getPontosExausto());
+        assertEquals(0, p.getPontosDefensivo());
     }
 
     @Test
-    public void testGameOverPorPerdaDeSaude() {
-        Personagem p = personagemService.getPersonagem();
-        int saudeInicial = p.getSaude();
+    public void deveIgnorarPontuacaoQuandoEscolhaForInvalida() {
+        // Cenário
+        service.criarPersonagem("Arthur", 35);
 
-        // Zera a saúde do personagem aplicando um dano igual à saúde atual
-        personagemService.aplicarConsequencia(0, -saudeInicial, 0, 0);
+        // Execução (escolha 4 ou 0 não devem pontuar)
+        service.registrarEscolha(4);
+        service.registrarEscolha(0);
 
-        assertTrue(personagemService.isGameOver(), "O jogo deve dar Game Over quando a saúde chegar a 0");
-    }
-
-    @Test
-    public void testGameOverPorPerdaDeRelacaoFamiliar() {
-        Personagem p = personagemService.getPersonagem();
-        int relacaoInicial = p.getRelacaoFamiliar();
-
-        // Zera a relação familiar do personagem
-        personagemService.aplicarConsequencia(0, 0, 0, -relacaoInicial);
-
-        assertTrue(personagemService.isGameOver(), "O jogo deve dar Game Over quando a relação familiar chegar a 0");
-    }
-
-    @Test
-    public void testJogoContinuaSeAtributosForemPositivos() {
-        // Aplica consequências leves que não zeram os atributos
-        personagemService.aplicarConsequencia(1000, -10, -10, -10);
-
-        assertFalse(personagemService.isGameOver(), "O jogo NÃO deve dar Game Over se a Saúde e a Relação Familiar forem maiores que 0");
+        // Verificações
+        Personagem p = service.getPersonagem();
+        assertEquals(0, p.getPontosCalculista());
+        assertEquals(0, p.getPontosExausto());
+        assertEquals(0, p.getPontosDefensivo());
     }
 }

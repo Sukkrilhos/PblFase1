@@ -1,11 +1,7 @@
 // Personagem.java
 public class Personagem {
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
     private String nome = "Valter Branco"; // Protagonista fixo do roteiro
-
+    private int idade = 50;
 
     // Atributos do jogo "Reação em Cadeia"
     private int dinheiro = 0;
@@ -14,6 +10,7 @@ public class Personagem {
     private int relacaoFamiliar = 100;
 
     public String getNome() { return nome; }
+    public int getIdade() { return idade; }
 
     public int getDinheiro() { return dinheiro; }
     public void alterarDinheiro(int valor) { this.dinheiro += valor; }
@@ -26,6 +23,4 @@ public class Personagem {
 
     public int getRelacaoFamiliar() { return relacaoFamiliar; }
     public void alterarRelacao(int valor) { this.relacaoFamiliar += valor; }
-
-
 }

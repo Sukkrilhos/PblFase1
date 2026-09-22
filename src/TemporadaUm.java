@@ -42,11 +42,8 @@ public class TemporadaUm {
 
         if (escolhaPrincipal == 1) {
             dialogos.mostrarMensagem("\nROTA A INICIADA: Você recusou o mundo do crime.");
-            dialogos.mostrarMensagem("Valter tenta seguir a vida de forma honesta, lidando com as dívidas e o peso da doença.");
-            dialogos.mostrarMensagem("Sua moral permanece intacta, mas a pressão financeira sufoca a família dia após dia.");
-            dialogos.mostrarMensagem("\n[FIM DA ROTA A: Uma vida comum, difícil, mas dentro da lei.]");
             pausarParaLeitura();
-            return true; // Encerra a Temporada 1 imediatamente e volta ao menu
+            return false;
         } else {
             dialogos.mostrarMensagem("\nROTA B/C INICIADA: Você aceitou a proposta de Kadu.");
             personagemService.aplicarConsequencia(5000, 0, -30, 0);
@@ -67,7 +64,7 @@ public class TemporadaUm {
         }
 
         pausarParaLeitura();
-        return false; // Continua para a Temporada 2 normalmente se escolheu o crime
+        return false;
     }
 
     private void pausarParaLeitura() {
