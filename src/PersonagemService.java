@@ -32,4 +32,7 @@ public class PersonagemService {
     public Personagem getPersonagem() {
         return repository.buscar();
     }
+
+    public void setPersonagem(Personagem personagem) {
+    }
 }

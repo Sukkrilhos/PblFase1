@@ -23,4 +23,7 @@ public class Personagem {
 
     public int getRelacaoFamiliar() { return relacaoFamiliar; }
     public void alterarRelacao(int valor) { this.relacaoFamiliar += valor; }
+
+    public void setNome(String nomeEscolhido) {
+    }
 }

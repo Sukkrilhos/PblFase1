@@ -1,0 +1,11 @@
+{
+  "personagem": {
+    "nome": "Valter Branco",
+    "idade": 50,
+    "dinheiro": 0,
+    "saude": 100,
+    "moralEtica": 100,
+    "relacaoFamiliar": 100
+  },
+  "temporadaAtual": 1
+}
