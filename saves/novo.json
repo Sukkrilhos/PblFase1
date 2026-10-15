@@ -1,0 +1,14 @@
+{
+  "personagem": {
+    "nome": "Valter Branco",
+    "idade": 50,
+    "dinheiro": 0,
+    "saude": 100,
+    "moralEtica": 90,
+    "relacaoFamiliar": 90,
+    "inventario": []
+  },
+  "temporadaAtual": 1,
+  "nomeSave": "novo",
+  "dataHora": "15/10/2026 16:32:40"
+}

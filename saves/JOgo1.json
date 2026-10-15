@@ -1,0 +1,18 @@
+{
+  "personagem": {
+    "nome": "Valter Branco",
+    "idade": 50,
+    "dinheiro": -3000,
+    "saude": 70,
+    "moralEtica": -25,
+    "relacaoFamiliar": -20,
+    "inventario": [
+      "Máscara de Gás",
+      "Ricina",
+      "Passaportes Falsos"
+    ]
+  },
+  "temporadaAtual": 4,
+  "nomeSave": "JOgo1",
+  "dataHora": "15/10/2026 12:12:33"
+}

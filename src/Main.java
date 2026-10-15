@@ -6,10 +6,13 @@ public class Main {
         // 2. Instancia as Regras de Negócio, passando o Gerenciador de Save
         PersonagemService service = new PersonagemService(gerenciadorDeSave);
 
-        // 3. Instancia a Interface (View)
-        Dialogos dialogos = new Dialogos();
+        // 3. Instancia o novo sistema de Áudio
+        GerenciadorDeAudio audio = new GerenciadorDeAudio();
 
-        // 4. Instancia o Controlador
+        // 4. Instancia a Interface (View), injetando o Áudio
+        Dialogos dialogos = new Dialogos(audio);
+
+        // 5. Instancia o Controlador
         Controlador controlador = new Controlador(dialogos, service, gerenciadorDeSave);
 
         // Inicia a aplicação

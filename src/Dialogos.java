@@ -1,11 +1,14 @@
+import java.util.List;
 import java.util.Scanner;
 
 public class Dialogos {
-
     private Scanner scanner;
+    private GerenciadorDeAudio audio;
 
-    public Dialogos() {
+    // Construtor atualizado com a injeção do sistema de áudio
+    public Dialogos(GerenciadorDeAudio audio) {
         this.scanner = new Scanner(System.in);
+        this.audio = audio;
     }
 
     public void mostrarMenuPrincipal() {
@@ -43,10 +46,6 @@ public class Dialogos {
         System.out.println(mensagem);
     }
 
-    // =========================================================================
-    // MÉTODOS DE ENTRADA (MIGRADOS PARA A VIEW)
-    // =========================================================================
-
     public void pausarParaLeitura() {
         System.out.println("(Pressione Enter para continuar...)");
         scanner.nextLine();
@@ -58,8 +57,68 @@ public class Dialogos {
             scanner.next();
         }
         int valor = scanner.nextInt();
-        scanner.nextLine(); // Consome a quebra de linha que sobra do nextInt()
+        scanner.nextLine();
+
+        // Efeito sonoro de clique ao inserir um número válido
+        audio.tocarSom("sons/menu.wav");
+
         return valor;
+    }
+
+    public int lerOpcao(int min, int max) {
+        int valor;
+        while (true) {
+            valor = lerInteiroSeguro();
+            if (valor >= min && valor <= max) {
+                return valor;
+            }
+            System.out.print("Opção inválida! Escolha um número entre " + min + " e " + max + ": ");
+        }
+    }
+
+    public String lerTexto() {
+        String texto = scanner.nextLine().trim();
+        while (texto.isEmpty()) {
+            texto = scanner.nextLine().trim();
+        }
+
+        // Som de confirmação ao inserir texto
+        audio.tocarSom("sons/menu.wav");
+
+        return texto;
+    }
+
+    public String pedirNomeSave() {
+        System.out.println("\n--- NOVO JOGO ---");
+        System.out.print("Digite um nome para o seu save (ex: 'Playthrough 1', 'Rota Maligna'): ");
+        return lerTexto();
+    }
+
+    public Progresso mostrarMenuDeSaves(List<Progresso> saves) {
+        if (saves.isEmpty()) {
+            System.out.println("\nNenhum jogo salvo encontrado!");
+            return null;
+        }
+
+        System.out.println("\n=== JOGOS SALVOS ===");
+        for (int i = 0; i < saves.size(); i++) {
+            Progresso p = saves.get(i);
+            System.out.println((i + 1) + ". " + p.getNomeSave() + " | Temp " + p.getTemporadaAtual() + " | Último save: " + p.getDataHora());
+        }
+        System.out.println("0. Voltar ao Menu Principal");
+        System.out.print("Escolha o save que deseja carregar: ");
+
+        int escolha;
+        while (true) {
+            escolha = lerInteiroSeguro();
+            if (escolha >= 0 && escolha <= saves.size()) {
+                break;
+            }
+            System.out.print("Opção inválida! Escolha um número da lista: ");
+        }
+
+        if (escolha == 0) return null;
+        return saves.get(escolha - 1);
     }
 
     // =========================================================================
@@ -131,8 +190,6 @@ public class Dialogos {
         System.out.println("\nO que você faz?");
         System.out.println("1 - Descer com calma e negociar uma porcentagem dos lucros com ele.");
         System.out.println("2 - Jogar reagentes químicos na chapa para criar um gás de fuga e escapar correndo.");
-
-        // OPÇÃO SECRETA APARECE SE TIVER O ITEM:
         if (temMascara) {
             System.out.println("3 - [OPÇÃO SECRETA: MÁSCARA DE GÁS] Trancar o furgão, inundá-lo com gás mostarda, colocar a máscara e assistir os inimigos sufocarem.");
         }
@@ -148,6 +205,7 @@ public class Dialogos {
             System.out.println("\nCompletamente imune graças à máscara, você sai do furgão caminhando por cima dos corpos asfixiados. Você até saqueou os bolsos deles.");
         }
     }
+
     public void mostrarCenaSanguePiaParte1(String nome) {
         System.out.println("\n=== CAPÍTULO 4: O Sangue na Pia ===");
         System.out.println("Você chega em casa de madrugada e tem uma forte crise de tosse, cuspindo sangue na pia do banheiro.");
@@ -174,40 +232,28 @@ public class Dialogos {
     public void mostrarCenaNovoEsconderijoParte1(String nome) {
         System.out.println("\n=== CAPÍTULO 5: O Novo Esconderijo ===");
         System.out.println("O furgão não é mais seguro para cozinhar em grande escala.");
-        System.out.println("Kadu encontrou o porão de uma lavanderia industrial abandonada, mas o proprietário corrupto quer uma fortuna adiantada.");
-        System.out.println("\nVALTER: — Kadu, o preço desse aluguel é absurdo. De onde vamos tirar tanto dinheiro vivo agora?");
-        System.out.println("KADU: — Professor, o senhor decide. Ou a gente paga, ou fecha o laboratório.");
-        System.out.println("\nO que você decide fazer para conseguir o dinheiro do aluguel?");
-        System.out.println("1 - Usar as reservas de dinheiro reservadas para as suas sessões de radioterapia particular.");
-        System.out.println("2 - Recusar gastar o dinheiro da saúde e voltar a desviar reagentes químicos da escola.");
+        System.out.println("Kadu encontrou o porão de uma lavanderia abandonada, mas custa caro.");
+        System.out.println("\nO que você decide fazer?");
+        System.out.println("1 - Usar as reservas de dinheiro da radioterapia.");
+        System.out.println("2 - Voltar a desviar reagentes químicos da escola.");
+        System.out.println("3 - [CRIAR ITEM] Aproveitar os reagentes que restam para sintetizar 'Ricina', um veneno letal e indetectável (Custa Saúde, mas ganha uma arma secreta).");
         System.out.print("Sua escolha: ");
     }
 
     public void mostrarCenaNovoEsconderijoParte2(int escolhaAnterior) {
-        if (escolhaAnterior == 1) {
-            System.out.println("\nVocê tirou o dinheiro do tratamento médico. O porão é garantido, mas seu corpo começa a pagar o preço da negligência.");
-        } else {
-            System.out.println("\nVocê invadiu o almoxarifado do colégio de madrugada. Conseguiu os insumos, mas a sensação de culpa e o risco de ser pego aumentam.");
-        }
     }
 
     public void mostrarCenaOAtacadistaParte1(String nome) {
         System.out.println("\n=== CAPÍTULO 6: O Atacadista ===");
-        System.out.println("A produção no porão está a todo vapor, chamando a atenção de peixes maiores.");
-        System.out.println("Um distribuidor de alto escalão conhecido como 'O Fidalgo' convoca vocês para uma reunião e exige uma cota de 50 quilos por semana.");
-        System.out.println("\nFIDGALDO: — Ou vocês entregam essa quantidade exata toda semana, ou eu encerro a parceria de um jeito definitivo.");
-        System.out.println("\nComo você responde ao Fidalgo?");
-        System.out.println("1 - Aceitar a cota monstruosa, sacrificando suas noites de sono e sua saúde na linha de produção.");
-        System.out.println("2 - Bater o pé e impor um limite seguro de apenas 20 quilos, desafiando a autoridade dele.");
+        System.out.println("Um distribuidor conhecido como 'O Fidalgo' exige uma cota de 50 quilos por semana.");
+        System.out.println("\nComo você responde?");
+        System.out.println("1 - Aceitar a cota monstruosa (Sacrifica saúde e relação familiar).");
+        System.out.println("2 - Bater o pé e impor um limite seguro de 20 quilos.");
+        System.out.println("3 - [COMPRAR ITEM] Subornar o braço direito dele por R$ 8000 para encomendar 'Passaportes Falsos' para a sua família.");
         System.out.print("Sua escolha: ");
     }
 
     public void mostrarCenaOAtacadistaParte2(int escolhaAnterior) {
-        if (escolhaAnterior == 1) {
-            System.out.println("\nVocê se tornou um escravo da própria bancada. O lucro explodiu, mas sua saúde entrou em colapso total.");
-        } else {
-            System.out.println("\nVocê manteve o controle do ritmo de trabalho, mas plantou um inimigo perigoso que agora monitora cada passo seu.");
-        }
     }
 
     // =========================================================================
@@ -253,10 +299,11 @@ public class Dialogos {
     }
 
     // =========================================================================
-    // TEMPORADA 5: DESFECHOS FINAIS (ROTA B E ROTA C)
+    // TEMPORADA 5: DESFECHOS FINAIS
     // =========================================================================
 
     public void mostrarCenaFuga() {
+        audio.tocarSom("sons/gameover.wav"); // Efeito sonoro de derrota
         System.out.println("\n========================================================");
         System.out.println("CAPÍTULO 10: Sangue no Tapete (ROTA B - A QUEDA)");
         System.out.println("========================================================");
@@ -268,7 +315,21 @@ public class Dialogos {
         System.out.println("========================================================\n");
     }
 
+    public void mostrarCenaFugaSucesso() {
+        audio.tocarSom("sons/sucesso.wav"); // Efeito sonoro de vitória
+        System.out.println("\n========================================================");
+        System.out.println("CAPÍTULO 10: O Desaparecimento (ROTA B - FINAL SECRETO)");
+        System.out.println("========================================================");
+        System.out.println("Quando os assassinos do Cartel invadiram a sua casa, você já não estava lá.");
+        System.out.println("Graças aos Passaportes Falsos que comprou, Valter, Marisa e Enzo cruzaram a fronteira.");
+        System.out.println("Heitor encontrou apenas uma casa vazia. O seu império ruiu, mas a sua família sobreviveu,");
+        System.out.println("escondida numa praia isolada da América Central, a viver do dinheiro que restou.");
+        System.out.println("Você perdeu o poder, mas salvou a sua vida.");
+        System.out.println("========================================================\n");
+    }
+
     public void mostrarCenaAtaque() {
+        audio.tocarSom("sons/explosao.wav"); // Efeito sonoro de explosão
         System.out.println("\n========================================================");
         System.out.println("CAPÍTULO 10: Reação em Cadeia (ROTA C - A VINGANÇA)");
         System.out.println("========================================================");
@@ -278,15 +339,5 @@ public class Dialogos {
         System.out.println("toca no maquinário perfeito, sorri e dá seu último suspiro antes da polícia chegar.");
         System.out.println("O dinheiro está seguro para Marisa e Enzo. Você venceu. Mas perdeu sua alma.");
         System.out.println("========================================================\n");
-    }
-
-    public void mostrarMenuPausa() {
-        System.out.println("\n======= JOGO PAUSADO =======");
-        System.out.println("1 - Continuar Jogo");
-        System.out.println("2 - Salvar Progresso Atual");
-        System.out.println("3 - Voltar ao Menu Principal");
-        System.out.println("4 - Reiniciar Jogo");
-        System.out.println("============================");
-        System.out.print("Sua escolha: ");
     }
 }

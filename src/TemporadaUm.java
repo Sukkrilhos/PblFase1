@@ -14,10 +14,10 @@ public class TemporadaUm {
 
         // --- Cena 1: O Jantar ---
         dialogos.mostrarCenaJantarParte1(valter.getNome());
-        int fala1 = dialogos.lerInteiroSeguro();
+        int fala1 = dialogos.lerOpcao(1, 2);
 
         dialogos.mostrarCenaJantarParte2(valter.getNome(), fala1);
-        int escolhaCriticaJantar = dialogos.lerInteiroSeguro();
+        int escolhaCriticaJantar = dialogos.lerOpcao(1, 2);
 
         if (escolhaCriticaJantar == 1) {
             personagemService.aplicarConsequencia(0, 0, -10, -10);
@@ -32,12 +32,11 @@ public class TemporadaUm {
 
         // --- Cena 2: A Escolha ---
         dialogos.mostrarCenaAEscolha(valter.getNome());
-        int escolhaPrincipal = dialogos.lerInteiroSeguro();
+        int escolhaPrincipal = dialogos.lerOpcao(1, 2);
 
         if (personagemService.isGameOver()) return true;
 
         if (escolhaPrincipal == 1) {
-            // Chama a mensagem de encerramento da Rota A
             dialogos.mostrarDesfechoRotaA();
             dialogos.pausarParaLeitura();
             return true;
@@ -50,7 +49,7 @@ public class TemporadaUm {
 
         // --- Cena 3: A Primeira Fornada ---
         dialogos.mostrarCenaFornada(valter.getNome());
-        int escolhaFornada = dialogos.lerInteiroSeguro();
+        int escolhaFornada = dialogos.lerOpcao(1, 3);
 
         if (escolhaFornada == 1) {
             personagemService.aplicarConsequencia(-500, 0, 0, 0);
@@ -60,7 +59,7 @@ public class TemporadaUm {
             dialogos.mostrarMensagem("\n[Efeito: Dinheiro +3000 | Saúde -20 | Moral -10]");
         } else if (escolhaFornada == 3) {
             personagemService.aplicarConsequencia(-1000, 0, 0, 0);
-            personagemService.adicionarItemInventario("Máscara de Gás"); // GANHA O ITEM
+            personagemService.adicionarItemInventario("Máscara de Gás");
             dialogos.mostrarMensagem("\n[Efeito: Dinheiro -1000 | ITEM ADQUIRIDO: Máscara de Gás | Saúde Preservada]");
         }
 

@@ -16,7 +16,9 @@ public class TemporadaDois {
         boolean temMascara = personagemService.verificarItem("Máscara de Gás");
         dialogos.mostrarCenaFurgaoEncurraladoParte1(valter.getNome(), temMascara);
 
-        int escolhaFurgao = dialogos.lerInteiroSeguro();
+        int maxOpcao = temMascara ? 3 : 2;
+        int escolhaFurgao = dialogos.lerOpcao(1, maxOpcao);
+
         dialogos.mostrarCenaFurgaoEncurraladoParte2(escolhaFurgao);
 
         if (escolhaFurgao == 1) {
@@ -26,19 +28,16 @@ public class TemporadaDois {
             personagemService.aplicarConsequencia(0, 0, -20, 0);
             dialogos.mostrarMensagem("\n[Efeito: Moral -20 | Fuga arriscada bem-sucedida]");
         } else if (escolhaFurgao == 3 && temMascara) {
-            // Opção Secreta Executada
             personagemService.aplicarConsequencia(1000, 0, -40, 0);
             dialogos.mostrarMensagem("\n[Efeito: Dinheiro +1000 (Saque) | Moral -40 | Fuga Impecável]");
-        } else {
-            // Caso o jogador digite 3 sem ter o item (para evitar trapaças)
-            dialogos.mostrarMensagem("\nOpção inválida ou item não possuído. A hesitação custou caro.");
-            personagemService.aplicarConsequencia(0, -20, 0, 0);
-            dialogos.mostrarMensagem("[Efeito: Saúde -20 por hesitar no combate]");
         }
+
+        if (personagemService.isGameOver()) return true;
+        dialogos.pausarParaLeitura();
 
         // --- Cena 2: O Sangue na Pia ---
         dialogos.mostrarCenaSanguePiaParte1(valter.getNome());
-        int escolhaPia = dialogos.lerInteiroSeguro(); // Pede a entrada UMA vez só
+        int escolhaPia = dialogos.lerOpcao(1, 2);
 
         dialogos.mostrarCenaSanguePiaParte2(escolhaPia);
 

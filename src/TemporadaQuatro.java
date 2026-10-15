@@ -2,7 +2,6 @@ public class TemporadaQuatro {
     private Dialogos dialogos;
     private PersonagemService personagemService;
 
-    // Construtor atualizado, sem o Scanner
     public TemporadaQuatro(Dialogos dialogos, PersonagemService personagemService) {
         this.dialogos = dialogos;
         this.personagemService = personagemService;
@@ -16,7 +15,7 @@ public class TemporadaQuatro {
 
         // --- CAPÍTULO 7: O Fundo Falso ---
         dialogos.mostrarCenaFundoFalsoParte1(valter.getNome());
-        int escolhaFundo = dialogos.lerInteiroSeguro();
+        int escolhaFundo = dialogos.lerOpcao(1, 2);
 
         dialogos.mostrarCenaFundoFalsoParte2(escolhaFundo);
 
@@ -29,11 +28,11 @@ public class TemporadaQuatro {
         }
 
         if (personagemService.isGameOver()) return 0;
-        dialogos.pausarParaLeitura(); // <--- Pausa essencial
+        dialogos.pausarParaLeitura();
 
         // --- CAPÍTULO 8: A Encruzilhada / O Cerco ---
         dialogos.mostrarCenaEncruzilhadaParte1(valter.getNome());
-        int escolhaEncruzilhada = dialogos.lerInteiroSeguro();
+        int escolhaEncruzilhada = dialogos.lerOpcao(1, 2);
 
         dialogos.mostrarCenaEncruzilhadaParte2(escolhaEncruzilhada);
 
@@ -43,7 +42,7 @@ public class TemporadaQuatro {
             dialogos.mostrarMensagem("\n[ROTA C ESCOLHIDA: Você escolheu o caminho da vingança e do confronto final.]");
         }
 
-        dialogos.pausarParaLeitura(); // <--- Pausa final da Temporada 4
-        return escolhaEncruzilhada; // Retorna 1 (Fuga) ou 2 (Ataque) para a Temporada 5
+        dialogos.pausarParaLeitura();
+        return escolhaEncruzilhada;
     }
 }

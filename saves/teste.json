@@ -1,0 +1,17 @@
+{
+  "personagem": {
+    "nome": "Valter Branco",
+    "idade": 50,
+    "dinheiro": 0,
+    "saude": 0,
+    "moralEtica": -35,
+    "relacaoFamiliar": 0,
+    "inventario": [
+      "Máscara de Gás",
+      "Ricina"
+    ]
+  },
+  "temporadaAtual": 4,
+  "nomeSave": "teste",
+  "dataHora": "15/10/2026 13:08:21"
+}

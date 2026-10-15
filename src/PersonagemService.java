@@ -4,12 +4,7 @@ public class PersonagemService {
 
     public PersonagemService(GerenciadorDeSave gerenciadorDeSave) {
         this.gerenciadorDeSave = gerenciadorDeSave;
-
-        // Ao iniciar o serviço, tenta carregar o personagem guardado anteriormente
-        Progresso p = gerenciadorDeSave.carregarJogo();
-        if (p != null) {
-            this.personagemAtual = p.getPersonagem();
-        }
+        // O carregamento do save foi removido daqui, pois agora é o Controlador que escolhe qual ficheiro carregar.
     }
 
     public Personagem inicializarValter() {
@@ -18,6 +13,7 @@ public class PersonagemService {
         return this.personagemAtual;
     }
 
+    // Regra de negócio: Atualizar atributos baseados na escolha
     public void aplicarConsequencia(int deltaDinheiro, int deltaSaude, int deltaMoral, int deltaRelacao) {
         if (this.personagemAtual == null) return;
 
@@ -26,9 +22,11 @@ public class PersonagemService {
         this.personagemAtual.alterarMoral(deltaMoral);
         this.personagemAtual.alterarRelacao(deltaRelacao);
 
-        gerenciadorDeSave.atualizarPersonagem(this.personagemAtual); // Guarda instantaneamente no JSON
+        // Guarda instantaneamente no JSON do save atual
+        gerenciadorDeSave.atualizarPersonagem(this.personagemAtual);
     }
 
+    // Verifica se os atributos zeraram (Game Over prematuro)
     public boolean isGameOver() {
         if (this.personagemAtual == null) return false;
         return this.personagemAtual.getSaude() <= 0 || this.personagemAtual.getRelacaoFamiliar() <= 0;
@@ -40,10 +38,14 @@ public class PersonagemService {
 
     public void setPersonagem(Personagem personagem) {
         this.personagemAtual = personagem;
+        // Ao carregar um jogo, garante que o gerenciador sabe qual é o estado mais recente
         gerenciadorDeSave.atualizarPersonagem(personagem);
     }
 
-    // Métodos de Inventário adicionados anteriormente:
+    // ==========================================
+    // SISTEMA DE INVENTÁRIO
+    // ==========================================
+
     public void adicionarItemInventario(String item) {
         if (this.personagemAtual != null) {
             this.personagemAtual.adicionarItem(item);

@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Controlador {
     private Dialogos dialogos;
     private PersonagemService personagemService;
@@ -42,21 +44,26 @@ public class Controlador {
         } while (opcao != 5);
     }
 
-    // Tenta iniciar um novo jogo. Se a exceção de reinício for lançada, o ciclo repete.
+    // Tenta iniciar um novo jogo pedindo o nome do save
     private void tentarIniciarJogo() {
         boolean jogando = true;
         while (jogando) {
             try {
+                // ANTES DE INICIAR O JOGO, PEDE O NOME DO SAVE
+                String nomeSave = dialogos.pedirNomeSave();
+                gerenciadorDeSave.setNomeSaveAtual(nomeSave);
+
                 iniciarJogo();
                 jogando = false; // Se chegar ao fim sem exceções, sai do ciclo
             } catch (ReiniciarPartidaException e) {
                 limparTela();
                 dialogos.mostrarMensagem("\n--- REINICIANDO SISTEMA A PARTIR DO ZERO ---");
+                // Repete o ciclo, pedindo o nome do save novamente para a nova tentativa
             }
         }
     }
 
-    // Tenta carregar um jogo. Se morrer e escolher reiniciar, transita para um novo jogo limpo.
+    // Tenta carregar um jogo a partir da lista
     private void tentarCarregarJogo() {
         boolean jogando = true;
         while (jogando) {
@@ -66,7 +73,7 @@ public class Controlador {
             } catch (ReiniciarPartidaException e) {
                 limparTela();
                 dialogos.mostrarMensagem("\n--- REINICIANDO SISTEMA A PARTIR DO ZERO ---");
-                tentarIniciarJogo(); // Inicia uma jornada do zero após apagar o save
+                tentarIniciarJogo(); // Volta para o Novo Jogo limpo
                 jogando = false;
             }
         }
@@ -106,22 +113,26 @@ public class Controlador {
         TemporadaCinco temporadaCinco = new TemporadaCinco(dialogos, personagemService);
         temporadaCinco.executarTemporada(valter, escolhaRotaFinal);
 
-        // Chama a gestão de fim de campanha (que também pode lançar o ReiniciarPartidaException)
+        // Chama a gestão de fim de campanha
         gerenciadorDeSessao.lidarComFimDeCampanha();
     }
 
     private void carregarJogoSalvo() {
-        Progresso save = gerenciadorDeSave.carregarJogo();
+        List<Progresso> savesDisponiveis = gerenciadorDeSave.listarSaves();
+        Progresso saveEscolhido = dialogos.mostrarMenuDeSaves(savesDisponiveis);
 
-        if (save != null) {
-            personagemService.setPersonagem(save.getPersonagem());
-            dialogos.mostrarMensagem("\nJogo carregado com sucesso! Retomando a partir da Temporada " + save.getTemporadaAtual());
+        if (saveEscolhido != null) {
+            // Regista o nome atual no Gerenciador para que os próximos saves vão para o mesmo ficheiro
+            gerenciadorDeSave.setNomeSaveAtual(saveEscolhido.getNomeSave());
+
+            // Injeta o personagem carregado no Service
+            personagemService.setPersonagem(saveEscolhido.getPersonagem());
+
+            dialogos.mostrarMensagem("\nJogo '" + saveEscolhido.getNomeSave() + "' carregado com sucesso!");
+            dialogos.mostrarMensagem("Retomando a partir da Temporada " + saveEscolhido.getTemporadaAtual());
             dialogos.pausarParaLeitura();
 
-            continuarJogoDaTemporada(save.getTemporadaAtual());
-        } else {
-            dialogos.mostrarMensagem("\nNenhum arquivo de salvamento encontrado. Jogue e conclua pelo menos a Temporada 1 para gerar um save!");
-            dialogos.pausarParaLeitura();
+            continuarJogoDaTemporada(saveEscolhido.getTemporadaAtual());
         }
     }
 

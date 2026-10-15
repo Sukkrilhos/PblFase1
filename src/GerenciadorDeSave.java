@@ -1,57 +1,106 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.File;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GerenciadorDeSave {
-    private static final String ARQUIVO_SAVE = "save_ponto_ebulicao.json";
+    private static final String DIRETORIO_SAVES = "saves/";
     private Gson gson;
+    private String nomeSaveAtual; // Guarda o nome do save que está a ser jogado
 
     public GerenciadorDeSave() {
         this.gson = new GsonBuilder().setPrettyPrinting().create();
+
+        // Cria a pasta "saves/" automaticamente na raiz do projeto, se não existir
+        File diretorio = new File(DIRETORIO_SAVES);
+        if (!diretorio.exists()) {
+            diretorio.mkdirs();
+        }
+    }
+
+    public void setNomeSaveAtual(String nomeSave) {
+        this.nomeSaveAtual = nomeSave;
+    }
+
+    // Gera o nome do ficheiro limpando caracteres especiais para evitar erros no Windows/Linux
+    private String getCaminhoArquivoAtual() {
+        String nomeArquivo = nomeSaveAtual.replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+        return DIRETORIO_SAVES + nomeArquivo + ".json";
+    }
+
+    private String obterDataHoraAtual() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+        return dtf.format(LocalDateTime.now());
     }
 
     public void salvarJogo(Progresso progresso) {
-        try (FileWriter writer = new FileWriter(ARQUIVO_SAVE)) {
+        progresso.setNomeSave(this.nomeSaveAtual);
+        progresso.setDataHora(obterDataHoraAtual()); // Carimba a hora exata sempre que salva
+
+        try (FileWriter writer = new FileWriter(getCaminhoArquivoAtual())) {
             gson.toJson(progresso, writer);
         } catch (IOException e) {
             System.out.println("Erro ao salvar o jogo: " + e.getMessage());
         }
     }
 
-    public Progresso carregarJogo() {
-        try (FileReader reader = new FileReader(ARQUIVO_SAVE)) {
+    private Progresso carregarJogoAtual() {
+        if (nomeSaveAtual == null) return null;
+        try (FileReader reader = new FileReader(getCaminhoArquivoAtual())) {
             return gson.fromJson(reader, Progresso.class);
         } catch (IOException e) {
-            return null; // Retorna nulo se for um Novo Jogo
+            return null;
         }
     }
 
-
     public void atualizarPersonagem(Personagem personagem) {
-        Progresso progresso = carregarJogo();
+        if (nomeSaveAtual == null) return; // Proteção
+
+        Progresso progresso = carregarJogoAtual();
         if (progresso == null) {
-            // Se o ficheiro ainda não existir, cria o progresso inicial na Temporada 1
             progresso = new Progresso(personagem, 1);
         } else {
             progresso.setPersonagem(personagem);
         }
+        salvarJogo(progresso); // Grava atualizando a data e hora
+    }
 
-        // Guarda silenciosamente (sem imprimir mensagem no terminal a cada escolha)
-        try (FileWriter writer = new FileWriter(ARQUIVO_SAVE)) {
-            gson.toJson(progresso, writer);
-        } catch (IOException e) {
-            System.out.println("Erro ao salvar as consequências: " + e.getMessage());
+    public void apagarSave() {
+        if (nomeSaveAtual != null) {
+            File arquivo = new File(getCaminhoArquivoAtual());
+            if (arquivo.exists()) {
+                arquivo.delete();
+            }
+            nomeSaveAtual = null; // Limpa a referência
         }
     }
 
+    // --- NOVO: MÉTODOS PARA MÚLTIPLOS SAVES ---
 
-    public void apagarSave() {
-        File arquivo = new File(ARQUIVO_SAVE);
-        if (arquivo.exists()) {
-            arquivo.delete();
+    // Lê todos os ficheiros .json dentro da pasta "saves/" e devolve uma lista
+    public List<Progresso> listarSaves() {
+        List<Progresso> saves = new ArrayList<>();
+        File pasta = new File(DIRETORIO_SAVES);
+        File[] arquivos = pasta.listFiles((dir, nome) -> nome.toLowerCase().endsWith(".json"));
+
+        if (arquivos != null) {
+            for (File arquivo : arquivos) {
+                try (FileReader reader = new FileReader(arquivo)) {
+                    Progresso p = gson.fromJson(reader, Progresso.class);
+                    if (p != null) {
+                        saves.add(p);
+                    }
+                } catch (IOException e) {
+                    // Ignora ficheiros corrompidos
+                }
+            }
         }
+        return saves;
     }
 }
