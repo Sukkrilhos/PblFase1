@@ -1,14 +1,11 @@
-import java.util.Scanner;
-
 public class TemporadaTres {
     private Dialogos dialogos;
     private PersonagemService personagemService;
-    private Scanner scanner;
 
-    public TemporadaTres(Dialogos dialogos, PersonagemService personagemService, Scanner scanner) {
+    // Construtor atualizado, sem o Scanner
+    public TemporadaTres(Dialogos dialogos, PersonagemService personagemService) {
         this.dialogos = dialogos;
         this.personagemService = personagemService;
-        this.scanner = scanner;
     }
 
     public boolean executarTemporada(Personagem valter) {
@@ -18,10 +15,9 @@ public class TemporadaTres {
 
         // --- CAPÍTULO 5: O Novo Esconderijo (Interação 1) ---
         dialogos.mostrarCenaNovoEsconderijoParte1(valter.getNome());
-        int fala1 = lerInteiroSeguro();
+        int escolhaEsconderijo = dialogos.lerInteiroSeguro(); // CORREÇÃO: Lê apenas uma vez
 
-        dialogos.mostrarCenaNovoEsconderijoParte2(fala1);
-        int escolhaEsconderijo = lerInteiroSeguro();
+        dialogos.mostrarCenaNovoEsconderijoParte2(escolhaEsconderijo);
 
         if (escolhaEsconderijo == 1) {
             personagemService.aplicarConsequencia(0, -25, -5, 0);
@@ -32,14 +28,13 @@ public class TemporadaTres {
         }
 
         if (personagemService.isGameOver()) return true;
-        pausarParaLeitura();
+        dialogos.pausarParaLeitura(); // Usa o pausar da View
 
         // --- CAPÍTULO 6: O Atacadista (Interação 2) ---
         dialogos.mostrarCenaOAtacadistaParte1(valter.getNome());
-        int fala2 = lerInteiroSeguro();
+        int escolhaAtacadista = dialogos.lerInteiroSeguro(); // CORREÇÃO: Lê apenas uma vez
 
-        dialogos.mostrarCenaOAtacadistaParte2(fala2);
-        int escolhaAtacadista = lerInteiroSeguro();
+        dialogos.mostrarCenaOAtacadistaParte2(escolhaAtacadista);
 
         if (escolhaAtacadista == 1) {
             personagemService.aplicarConsequencia(10000, -30, -15, -15);
@@ -50,23 +45,8 @@ public class TemporadaTres {
         }
 
         if (personagemService.isGameOver()) return true;
-        pausarParaLeitura();
+        dialogos.pausarParaLeitura();
 
         return false; // Fim da Temporada 3 com sucesso
-    }
-
-    private void pausarParaLeitura() {
-        dialogos.mostrarMensagem("(Pressione Enter para continuar...)");
-        scanner.nextLine();
-    }
-
-    private int lerInteiroSeguro() {
-        while (!scanner.hasNextInt()) {
-            dialogos.mostrarMensagem("Entrada inválida! Digite o número correspondente.");
-            scanner.next();
-        }
-        int valor = scanner.nextInt();
-        scanner.nextLine();
-        return valor;
     }
 }

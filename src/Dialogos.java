@@ -1,4 +1,12 @@
+import java.util.Scanner;
+
 public class Dialogos {
+
+    private Scanner scanner;
+
+    public Dialogos() {
+        this.scanner = new Scanner(System.in);
+    }
 
     public void mostrarMenuPrincipal() {
         System.out.println("\n===== Ponto Zero =====");
@@ -33,6 +41,25 @@ public class Dialogos {
 
     public void mostrarMensagem(String mensagem) {
         System.out.println(mensagem);
+    }
+
+    // =========================================================================
+    // MÉTODOS DE ENTRADA (MIGRADOS PARA A VIEW)
+    // =========================================================================
+
+    public void pausarParaLeitura() {
+        System.out.println("(Pressione Enter para continuar...)");
+        scanner.nextLine();
+    }
+
+    public int lerInteiroSeguro() {
+        while (!scanner.hasNextInt()) {
+            System.out.println("Entrada inválida! Digite o número correspondente.");
+            scanner.next();
+        }
+        int valor = scanner.nextInt();
+        scanner.nextLine(); // Consome a quebra de linha que sobra do nextInt()
+        return valor;
     }
 
     // =========================================================================
@@ -77,32 +104,50 @@ public class Dialogos {
         System.out.println("A fumaça do laboratório improvisado no furgão está destruindo seus pulmões já debilitados.");
         System.out.println("1 - Pausar a produção para respirar (Ganha menos dinheiro, mas poupa saúde).");
         System.out.println("2 - Ignorar a dor e forçar a produção máxima (Ganha muito dinheiro, mas derruba a saúde e corrompe a moral).");
+        System.out.println("3 - Investir R$ 1000 numa Máscara de Gás profissional (Perde dinheiro, ganha item 'Máscara de Gás' e poupa saúde).");
         System.out.print("Sua escolha: ");
+    }
+
+    public void mostrarDesfechoRotaA() {
+        System.out.println("\n========================================================");
+        System.out.println("CAPÍTULO FINAL: O Homem Honesto (ROTA A)");
+        System.out.println("========================================================");
+        System.out.println("Você olhou nos olhos de Kadu e balançou a cabeça. O crime não era o seu caminho.");
+        System.out.println("Valter Branco continuou dando aulas de química e fazendo bicos para pagar as contas.");
+        System.out.println("Infelizmente, o câncer avançou implacavelmente e as dívidas engoliram sua família.");
+        System.out.println("Você morreu pobre, mas com a consciência limpa. Marisa e Enzo nunca souberam do que você quase se tornou.");
+        System.out.println("========================================================\n");
     }
 
     // =========================================================================
     // TEMPORADA 2: DIÁLOGOS E INTERAÇÕES
     // =========================================================================
 
-    public void mostrarCenaFurgaoEncurraladoParte1(String nome) {
+    public void mostrarCenaFurgaoEncurraladoParte1(String nome, boolean temMascara) {
         System.out.println("\n=== CAPÍTULO 3: O Furgão Encurralado ===");
         System.out.println("Dois carros pretos fecham a saída do beco escuro.");
         System.out.println("O traficante 'Maluco' arranca Kadu de dentro do furgão e aponta uma arma para a cabeça dele.");
         System.out.println("MALUCO: — Quem é o químico que tá invadindo a minha praça? Fala ou o moleque morre aqui!");
         System.out.println("\nO que você faz?");
         System.out.println("1 - Descer com calma e negociar uma porcentagem dos lucros com ele.");
-        System.out.println("2 - Jogar reagentes químicos na chapa para criar um gás de fuga e escapar atirando.");
+        System.out.println("2 - Jogar reagentes químicos na chapa para criar um gás de fuga e escapar correndo.");
+
+        // OPÇÃO SECRETA APARECE SE TIVER O ITEM:
+        if (temMascara) {
+            System.out.println("3 - [OPÇÃO SECRETA: MÁSCARA DE GÁS] Trancar o furgão, inundá-lo com gás mostarda, colocar a máscara e assistir os inimigos sufocarem.");
+        }
         System.out.print("Sua escolha: ");
     }
 
     public void mostrarCenaFurgaoEncurraladoParte2(int escolhaAnterior) {
         if (escolhaAnterior == 1) {
             System.out.println("\nMaluco aceitou a proposta, mas deixou claro que agora você trabalha sob o comando dele.");
-        } else {
-            System.out.println("\nA fumaça química sufocou os capangas. Vocês escaparam correndo no meio do caos!");
+        } else if (escolhaAnterior == 2) {
+            System.out.println("\nA fumaça química sufocou os capangas temporariamente. Vocês escaparam correndo no meio do caos!");
+        } else if (escolhaAnterior == 3) {
+            System.out.println("\nCompletamente imune graças à máscara, você sai do furgão caminhando por cima dos corpos asfixiados. Você até saqueou os bolsos deles.");
         }
     }
-
     public void mostrarCenaSanguePiaParte1(String nome) {
         System.out.println("\n=== CAPÍTULO 4: O Sangue na Pia ===");
         System.out.println("Você chega em casa de madrugada e tem uma forte crise de tosse, cuspindo sangue na pia do banheiro.");
@@ -164,6 +209,7 @@ public class Dialogos {
             System.out.println("\nVocê manteve o controle do ritmo de trabalho, mas plantou um inimigo perigoso que agora monitora cada passo seu.");
         }
     }
+
     // =========================================================================
     // TEMPORADA 4: DIÁLOGOS E INTERAÇÕES
     // =========================================================================
@@ -188,7 +234,7 @@ public class Dialogos {
     }
 
     public void mostrarCenaEncruzilhadaParte1(String nome) {
-        System.out.println("\n=== CAPÍTULO 8: O Cerco ==ppm");
+        System.out.println("\n=== CAPÍTULO 8: O Cerco ===");
         System.out.println("O cerco final se fechou. Heitor está na cola das evidências na Polícia Federal,");
         System.out.println("e os capangas de 'O Fidalgo' descobriram a localização do porão e querem eliminar você.");
         System.out.println("\nVALTER: — Acabou o tempo. Não dá mais para esconder de ninguém.");
@@ -197,6 +243,15 @@ public class Dialogos {
         System.out.println("2 - Aceitar o fim, ficar para trás e armar um plano explosivo para destruir o cartel de vez.");
         System.out.print("Sua escolha: ");
     }
+
+    public void mostrarCenaEncruzilhadaParte2(int escolhaAnterior) {
+        if (escolhaAnterior == 1) {
+            System.out.println("\nVocê corre contra o tempo para arrumar as malas. A rota da fuga está traçada, mas o perigo está na porta.");
+        } else {
+            System.out.println("\nVocê acende um cigarro com as mãos firmes. Não há mais fuga. É hora de acertar as contas.");
+        }
+    }
+
     // =========================================================================
     // TEMPORADA 5: DESFECHOS FINAIS (ROTA B E ROTA C)
     // =========================================================================
@@ -225,11 +280,13 @@ public class Dialogos {
         System.out.println("========================================================\n");
     }
 
-    public void mostrarCenaEncruzilhadaParte2(int escolhaAnterior) {
-        if (escolhaAnterior == 1) {
-            System.out.println("\nVocê corre contra o tempo para arrumar as malas. A rota da fuga está traçada, mas o perigo está na porta.");
-        } else {
-            System.out.println("\nVocê acende um cigarro com as mãos firmes. Não há mais fuga. É hora de acertar as contas.");
-        }
+    public void mostrarMenuPausa() {
+        System.out.println("\n======= JOGO PAUSADO =======");
+        System.out.println("1 - Continuar Jogo");
+        System.out.println("2 - Salvar Progresso Atual");
+        System.out.println("3 - Voltar ao Menu Principal");
+        System.out.println("4 - Reiniciar Jogo");
+        System.out.println("============================");
+        System.out.print("Sua escolha: ");
     }
 }

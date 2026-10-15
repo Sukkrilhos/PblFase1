@@ -1,21 +1,18 @@
-import java.util.Scanner;
-
 public class TemporadaCinco {
     private Dialogos dialogos;
     private PersonagemService personagemService;
-    private Scanner scanner;
 
-    public TemporadaCinco(Dialogos dialogos, PersonagemService personagemService, Scanner scanner) {
+    // Construtor atualizado, sem o Scanner
+    public TemporadaCinco(Dialogos dialogos, PersonagemService personagemService) {
         this.dialogos = dialogos;
         this.personagemService = personagemService;
-        this.scanner = scanner;
     }
 
     public void executarTemporada(Personagem valter, int escolhaRotaFinal) {
         dialogos.mostrarMensagem("\n========================================================");
         dialogos.mostrarMensagem("          TEMPORADA 5: O FIM DA LINHA");
         dialogos.mostrarMensagem("========================================================");
-        pausarParaLeitura();
+        dialogos.pausarParaLeitura();
 
         if (escolhaRotaFinal == 1) {
             // --- ROTA B: A QUEDA (Capítulos 9 e 10) ---
@@ -28,11 +25,6 @@ public class TemporadaCinco {
             dialogos.mostrarMensagem("\n[FIM DA ROTA C: O último ato de química e redenção. O Cartel foi aniquilado.]");
         }
 
-        pausarParaLeitura();
-    }
-
-    private void pausarParaLeitura() {
-        dialogos.mostrarMensagem("(Pressione Enter para continuar...)");
-        scanner.nextLine();
+        dialogos.pausarParaLeitura();
     }
 }

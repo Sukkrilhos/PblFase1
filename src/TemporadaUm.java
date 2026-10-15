@@ -1,14 +1,10 @@
-import java.util.Scanner;
-
 public class TemporadaUm {
     private Dialogos dialogos;
     private PersonagemService personagemService;
-    private Scanner scanner;
 
-    public TemporadaUm(Dialogos dialogos, PersonagemService personagemService, Scanner scanner) {
+    public TemporadaUm(Dialogos dialogos, PersonagemService personagemService) {
         this.dialogos = dialogos;
         this.personagemService = personagemService;
-        this.scanner = scanner;
     }
 
     public boolean executarTemporada(Personagem valter) {
@@ -18,10 +14,10 @@ public class TemporadaUm {
 
         // --- Cena 1: O Jantar ---
         dialogos.mostrarCenaJantarParte1(valter.getNome());
-        int fala1 = lerInteiroSeguro();
+        int fala1 = dialogos.lerInteiroSeguro();
 
         dialogos.mostrarCenaJantarParte2(valter.getNome(), fala1);
-        int escolhaCriticaJantar = lerInteiroSeguro();
+        int escolhaCriticaJantar = dialogos.lerInteiroSeguro();
 
         if (escolhaCriticaJantar == 1) {
             personagemService.aplicarConsequencia(0, 0, -10, -10);
@@ -32,53 +28,43 @@ public class TemporadaUm {
             dialogos.mostrarMensagem("\nMARISA: — Nós vamos dar um jeito. Nós sempre damos. (Ela te abraça).");
             dialogos.mostrarMensagem("[Efeito: Relação Familiar +15]");
         }
-        pausarParaLeitura();
+        dialogos.pausarParaLeitura();
 
         // --- Cena 2: A Escolha ---
         dialogos.mostrarCenaAEscolha(valter.getNome());
-        int escolhaPrincipal = lerInteiroSeguro();
+        int escolhaPrincipal = dialogos.lerInteiroSeguro();
 
         if (personagemService.isGameOver()) return true;
 
         if (escolhaPrincipal == 1) {
-            dialogos.mostrarMensagem("\nROTA A INICIADA: Você recusou o mundo do crime.");
-            pausarParaLeitura();
-            return false;
+            // Chama a mensagem de encerramento da Rota A
+            dialogos.mostrarDesfechoRotaA();
+            dialogos.pausarParaLeitura();
+            return true;
         } else {
             dialogos.mostrarMensagem("\nROTA B/C INICIADA: Você aceitou a proposta de Kadu.");
             personagemService.aplicarConsequencia(5000, 0, -30, 0);
             dialogos.mostrarMensagem("[Efeito: Dinheiro +5000 | Moral -30]");
-            pausarParaLeitura();
+            dialogos.pausarParaLeitura();
         }
 
         // --- Cena 3: A Primeira Fornada ---
         dialogos.mostrarCenaFornada(valter.getNome());
-        int escolhaFornada = lerInteiroSeguro();
+        int escolhaFornada = dialogos.lerInteiroSeguro();
 
         if (escolhaFornada == 1) {
             personagemService.aplicarConsequencia(-500, 0, 0, 0);
             dialogos.mostrarMensagem("\n[Efeito: Dinheiro -500 | Saúde Preservada]");
-        } else {
+        } else if (escolhaFornada == 2) {
             personagemService.aplicarConsequencia(3000, -20, -10, 0);
             dialogos.mostrarMensagem("\n[Efeito: Dinheiro +3000 | Saúde -20 | Moral -10]");
+        } else if (escolhaFornada == 3) {
+            personagemService.aplicarConsequencia(-1000, 0, 0, 0);
+            personagemService.adicionarItemInventario("Máscara de Gás"); // GANHA O ITEM
+            dialogos.mostrarMensagem("\n[Efeito: Dinheiro -1000 | ITEM ADQUIRIDO: Máscara de Gás | Saúde Preservada]");
         }
 
-        pausarParaLeitura();
+        dialogos.pausarParaLeitura();
         return false;
-    }
-
-    private void pausarParaLeitura() {
-        dialogos.mostrarMensagem("(Pressione Enter para continuar...)");
-        scanner.nextLine();
-    }
-
-    private int lerInteiroSeguro() {
-        while (!scanner.hasNextInt()) {
-            dialogos.mostrarMensagem("Entrada inválida! Digite o número correspondente.");
-            scanner.next();
-        }
-        int valor = scanner.nextInt();
-        scanner.nextLine();
-        return valor;
     }
 }

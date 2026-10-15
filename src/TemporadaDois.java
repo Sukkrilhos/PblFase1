@@ -1,14 +1,10 @@
-import java.util.Scanner;
-
 public class TemporadaDois {
     private Dialogos dialogos;
     private PersonagemService personagemService;
-    private Scanner scanner;
 
-    public TemporadaDois(Dialogos dialogos, PersonagemService personagemService, Scanner scanner) {
+    public TemporadaDois(Dialogos dialogos, PersonagemService personagemService) {
         this.dialogos = dialogos;
         this.personagemService = personagemService;
-        this.scanner = scanner;
     }
 
     public boolean executarTemporada(Personagem valter) {
@@ -17,29 +13,34 @@ public class TemporadaDois {
         dialogos.mostrarMensagem("========================================================");
 
         // --- Cena 1: O Furgão Encurralado ---
-        dialogos.mostrarCenaFurgaoEncurraladoParte1(valter.getNome());
-        int fala1 = lerInteiroSeguro();
+        boolean temMascara = personagemService.verificarItem("Máscara de Gás");
+        dialogos.mostrarCenaFurgaoEncurraladoParte1(valter.getNome(), temMascara);
 
-        dialogos.mostrarCenaFurgaoEncurraladoParte2(fala1);
-        int escolhaFurgao = lerInteiroSeguro();
+        int escolhaFurgao = dialogos.lerInteiroSeguro();
+        dialogos.mostrarCenaFurgaoEncurraladoParte2(escolhaFurgao);
 
         if (escolhaFurgao == 1) {
             personagemService.aplicarConsequencia(-2000, 0, -10, 0);
             dialogos.mostrarMensagem("\n[Efeito: Dinheiro -2000 | Moral -10]");
-        } else {
+        } else if (escolhaFurgao == 2) {
             personagemService.aplicarConsequencia(0, 0, -20, 0);
             dialogos.mostrarMensagem("\n[Efeito: Moral -20 | Fuga arriscada bem-sucedida]");
+        } else if (escolhaFurgao == 3 && temMascara) {
+            // Opção Secreta Executada
+            personagemService.aplicarConsequencia(1000, 0, -40, 0);
+            dialogos.mostrarMensagem("\n[Efeito: Dinheiro +1000 (Saque) | Moral -40 | Fuga Impecável]");
+        } else {
+            // Caso o jogador digite 3 sem ter o item (para evitar trapaças)
+            dialogos.mostrarMensagem("\nOpção inválida ou item não possuído. A hesitação custou caro.");
+            personagemService.aplicarConsequencia(0, -20, 0, 0);
+            dialogos.mostrarMensagem("[Efeito: Saúde -20 por hesitar no combate]");
         }
-
-        if (personagemService.isGameOver()) return true;
-        pausarParaLeitura();
 
         // --- Cena 2: O Sangue na Pia ---
         dialogos.mostrarCenaSanguePiaParte1(valter.getNome());
-        int fala2 = lerInteiroSeguro();
+        int escolhaPia = dialogos.lerInteiroSeguro(); // Pede a entrada UMA vez só
 
-        dialogos.mostrarCenaSanguePiaParte2(fala2);
-        int escolhaPia = lerInteiroSeguro();
+        dialogos.mostrarCenaSanguePiaParte2(escolhaPia);
 
         if (escolhaPia == 1) {
             personagemService.aplicarConsequencia(0, +10, -5, +10);
@@ -50,23 +51,8 @@ public class TemporadaDois {
         }
 
         if (personagemService.isGameOver()) return true;
-        pausarParaLeitura();
+        dialogos.pausarParaLeitura();
 
         return false;
-    }
-
-    private void pausarParaLeitura() {
-        dialogos.mostrarMensagem("(Pressione Enter para continuar...)");
-        scanner.nextLine();
-    }
-
-    private int lerInteiroSeguro() {
-        while (!scanner.hasNextInt()) {
-            dialogos.mostrarMensagem("Entrada inválida! Digite o número correspondente.");
-            scanner.next();
-        }
-        int valor = scanner.nextInt();
-        scanner.nextLine();
-        return valor;
     }
 }

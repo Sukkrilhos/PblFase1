@@ -1,13 +1,17 @@
-// Personagem.java
+import java.util.ArrayList;
+import java.util.List;
+
 public class Personagem {
-    private String nome = "Valter Branco"; // Protagonista fixo do roteiro
+    private String nome = "Valter Branco";
     private int idade = 50;
 
-    // Atributos do jogo "Reação em Cadeia"
     private int dinheiro = 0;
-    private int saude = 100; // Começa com 100, mas o câncer vai drenar isso
+    private int saude = 100;
     private int moralEtica = 100;
     private int relacaoFamiliar = 100;
+
+    // NOVO: Sistema de Inventário
+    private List<String> inventario = new ArrayList<>();
 
     public String getNome() { return nome; }
     public int getIdade() { return idade; }
@@ -25,5 +29,19 @@ public class Personagem {
     public void alterarRelacao(int valor) { this.relacaoFamiliar += valor; }
 
     public void setNome(String nomeEscolhido) {
+        this.nome = nomeEscolhido;
+    }
+
+    // --- MÉTODOS DO INVENTÁRIO ADICIONADOS ---
+    public List<String> getInventario() { return inventario; }
+
+    public void adicionarItem(String item) {
+        if (!inventario.contains(item)) {
+            inventario.add(item);
+        }
+    }
+
+    public boolean possuiItem(String item) {
+        return inventario.contains(item);
     }
 }

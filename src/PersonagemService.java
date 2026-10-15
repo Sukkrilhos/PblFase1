@@ -1,38 +1,57 @@
-// PersonagemService.java
 public class PersonagemService {
-    private PersonagemRepository repository;
+    private GerenciadorDeSave gerenciadorDeSave;
+    private Personagem personagemAtual; // Mantém o personagem carregado na memória
 
-    public PersonagemService(PersonagemRepository repository) {
-        this.repository = repository;
+    public PersonagemService(GerenciadorDeSave gerenciadorDeSave) {
+        this.gerenciadorDeSave = gerenciadorDeSave;
+
+        // Ao iniciar o serviço, tenta carregar o personagem guardado anteriormente
+        Progresso p = gerenciadorDeSave.carregarJogo();
+        if (p != null) {
+            this.personagemAtual = p.getPersonagem();
+        }
     }
 
     public Personagem inicializarValter() {
-        Personagem p = new Personagem();
-        repository.salvar(p);
-        return p;
+        this.personagemAtual = new Personagem();
+        gerenciadorDeSave.atualizarPersonagem(this.personagemAtual);
+        return this.personagemAtual;
     }
 
-    // Regra de negócio: Atualizar atributos baseados na escolha
     public void aplicarConsequencia(int deltaDinheiro, int deltaSaude, int deltaMoral, int deltaRelacao) {
-        Personagem p = repository.buscar();
-        if (p == null) return;
+        if (this.personagemAtual == null) return;
 
-        p.alterarDinheiro(deltaDinheiro);
-        p.alterarSaude(deltaSaude);
-        p.alterarMoral(deltaMoral);
-        p.alterarRelacao(deltaRelacao);
+        this.personagemAtual.alterarDinheiro(deltaDinheiro);
+        this.personagemAtual.alterarSaude(deltaSaude);
+        this.personagemAtual.alterarMoral(deltaMoral);
+        this.personagemAtual.alterarRelacao(deltaRelacao);
+
+        gerenciadorDeSave.atualizarPersonagem(this.personagemAtual); // Guarda instantaneamente no JSON
     }
 
-    // Verifica se os atributos zeraram (Game Over prematuro)
     public boolean isGameOver() {
-        Personagem p = repository.buscar();
-        return p.getSaude() <= 0 || p.getRelacaoFamiliar() <= 0;
+        if (this.personagemAtual == null) return false;
+        return this.personagemAtual.getSaude() <= 0 || this.personagemAtual.getRelacaoFamiliar() <= 0;
     }
 
     public Personagem getPersonagem() {
-        return repository.buscar();
+        return this.personagemAtual;
     }
 
     public void setPersonagem(Personagem personagem) {
+        this.personagemAtual = personagem;
+        gerenciadorDeSave.atualizarPersonagem(personagem);
+    }
+
+    // Métodos de Inventário adicionados anteriormente:
+    public void adicionarItemInventario(String item) {
+        if (this.personagemAtual != null) {
+            this.personagemAtual.adicionarItem(item);
+            gerenciadorDeSave.atualizarPersonagem(this.personagemAtual);
+        }
+    }
+
+    public boolean verificarItem(String item) {
+        return this.personagemAtual != null && this.personagemAtual.possuiItem(item);
     }
 }
