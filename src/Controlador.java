@@ -22,26 +22,23 @@ public class Controlador {
             opcao = dialogos.lerInteiroSeguro();
 
             switch (opcao) {
-                case 1:
-                    tentarIniciarJogo();
+                case 1: tentarIniciarJogo(); break;
+                case 2: tentarCarregarJogo(); break;
+                case 3: dialogos.mostrarInstrucoes(); break;
+                case 4: dialogos.mostrarCreditos(); break;
+
+                case 5: // NOVA OPÇÃO
+                    dialogos.mostrarGaleriaConquistas(personagemService);
                     break;
-                case 2:
-                    tentarCarregarJogo();
-                    break;
-                case 3:
-                    dialogos.mostrarInstrucoes();
-                    break;
-                case 4:
-                    dialogos.mostrarCreditos();
-                    break;
-                case 5:
+
+                case 6: // PASSOU A SER 6
                     dialogos.mostrarMensagem("Encerrando o sistema. Até a próxima!");
                     limparTela();
                     break;
                 default:
                     dialogos.mostrarMensagem("Opção inválida!");
             }
-        } while (opcao != 5);
+        } while (opcao != 6);
     }
 
     // Tenta iniciar um novo jogo pedindo o nome do save
@@ -118,21 +115,42 @@ public class Controlador {
     }
 
     private void carregarJogoSalvo() {
-        List<Progresso> savesDisponiveis = gerenciadorDeSave.listarSaves();
-        Progresso saveEscolhido = dialogos.mostrarMenuDeSaves(savesDisponiveis);
+        boolean noMenuSaves = true;
 
-        if (saveEscolhido != null) {
-            // Regista o nome atual no Gerenciador para que os próximos saves vão para o mesmo ficheiro
-            gerenciadorDeSave.setNomeSaveAtual(saveEscolhido.getNomeSave());
+        while (noMenuSaves) {
+            // Busca a lista atualizada a cada ciclo
+            List<Progresso> savesDisponiveis = gerenciadorDeSave.listarSaves();
+            Progresso saveEscolhido = dialogos.mostrarMenuDeSaves(savesDisponiveis);
 
-            // Injeta o personagem carregado no Service
-            personagemService.setPersonagem(saveEscolhido.getPersonagem());
+            if (saveEscolhido != null) {
+                // Pergunta o que fazer com o save escolhido
+                int acao = dialogos.mostrarOpcoesDoSave(saveEscolhido.getNomeSave());
 
-            dialogos.mostrarMensagem("\nJogo '" + saveEscolhido.getNomeSave() + "' carregado com sucesso!");
-            dialogos.mostrarMensagem("Retomando a partir da Temporada " + saveEscolhido.getTemporadaAtual());
-            dialogos.pausarParaLeitura();
+                if (acao == 1) { // 1 - CARREGAR
+                    gerenciadorDeSave.setNomeSaveAtual(saveEscolhido.getNomeSave());
+                    personagemService.setPersonagem(saveEscolhido.getPersonagem());
 
-            continuarJogoDaTemporada(saveEscolhido.getTemporadaAtual());
+                    dialogos.mostrarMensagem("\nJogo '" + saveEscolhido.getNomeSave() + "' carregado com sucesso!");
+                    dialogos.mostrarMensagem("Retomando a partir da Temporada " + saveEscolhido.getTemporadaAtual());
+                    dialogos.pausarParaLeitura();
+
+                    continuarJogoDaTemporada(saveEscolhido.getTemporadaAtual());
+                    noMenuSaves = false; // Sai do menu e começa a jogar
+
+                } else if (acao == 2) { // 2 - APAGAR
+                    gerenciadorDeSave.setNomeSaveAtual(saveEscolhido.getNomeSave());
+                    gerenciadorDeSave.apagarSave(); // Apaga o ficheiro JSON correspondente
+
+                    dialogos.mostrarMensagem("\nSave '" + saveEscolhido.getNomeSave() + "' apagado permanentemente!");
+                    dialogos.pausarParaLeitura();
+                    // O ciclo continua e mostra a lista de saves atualizada sem o que acabou de apagar
+                }
+                // Se a ação for 0 (Voltar), não faz nada e o ciclo repete, mostrando a lista novamente
+
+            } else {
+                // Se o jogador digitou 0 na lista de saves, sai do menu de carregar
+                noMenuSaves = false;
+            }
         }
     }
 

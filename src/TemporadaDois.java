@@ -35,6 +35,12 @@ public class TemporadaDois {
         if (personagemService.isGameOver()) return true;
         dialogos.pausarParaLeitura();
 
+        if (dialogos.oferecerSaveManual()) {
+            personagemService.salvarProgressoManual(2); // Passa o número da Temporada atual (2)
+            dialogos.mostrarMensagem("\n[Progresso salvo manualmente com sucesso no seu slot!]");
+            dialogos.pausarParaLeitura();
+        }
+
         // --- Cena 2: O Sangue na Pia ---
         dialogos.mostrarCenaSanguePiaParte1(valter.getNome());
         int escolhaPia = dialogos.lerOpcao(1, 2);

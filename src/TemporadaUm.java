@@ -28,15 +28,27 @@ public class TemporadaUm {
             dialogos.mostrarMensagem("\nMARISA: — Nós vamos dar um jeito. Nós sempre damos. (Ela te abraça).");
             dialogos.mostrarMensagem("[Efeito: Relação Familiar +15]");
         }
+
+        if (personagemService.isGameOver()) return true;
         dialogos.pausarParaLeitura();
+
+        // =======================================================
+        // PONTO DE SAVE MANUAL ENTRE OS CAPÍTULOS 1 E 2
+        // =======================================================
+        if (dialogos.oferecerSaveManual()) {
+            personagemService.salvarProgressoManual(1); // Temporada 1
+            dialogos.mostrarMensagem("\n[Progresso salvo manualmente com sucesso no seu slot!]");
+            dialogos.pausarParaLeitura();
+        }
+        // =======================================================
 
         // --- Cena 2: A Escolha ---
         dialogos.mostrarCenaAEscolha(valter.getNome());
         int escolhaPrincipal = dialogos.lerOpcao(1, 2);
 
-        if (personagemService.isGameOver()) return true;
-
         if (escolhaPrincipal == 1) {
+            // REGISTO DA CONQUISTA DA ROTA A
+            personagemService.desbloquearConquista("ROTA_A");
             dialogos.mostrarDesfechoRotaA();
             dialogos.pausarParaLeitura();
             return true;
@@ -44,6 +56,8 @@ public class TemporadaUm {
             dialogos.mostrarMensagem("\nROTA B/C INICIADA: Você aceitou a proposta de Kadu.");
             personagemService.aplicarConsequencia(5000, 0, -30, 0);
             dialogos.mostrarMensagem("[Efeito: Dinheiro +5000 | Moral -30]");
+
+            if (personagemService.isGameOver()) return true;
             dialogos.pausarParaLeitura();
         }
 
@@ -63,7 +77,9 @@ public class TemporadaUm {
             dialogos.mostrarMensagem("\n[Efeito: Dinheiro -1000 | ITEM ADQUIRIDO: Máscara de Gás | Saúde Preservada]");
         }
 
+        if (personagemService.isGameOver()) return true;
         dialogos.pausarParaLeitura();
+
         return false;
     }
 }

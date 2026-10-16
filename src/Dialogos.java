@@ -17,8 +17,34 @@ public class Dialogos {
         System.out.println("2. Carregar Jogo");
         System.out.println("3. Instruções");
         System.out.println("4. Créditos");
-        System.out.println("5. Sair");
+        System.out.println("5. Galeria de Conquistas");
+        System.out.println("6. Sair");
         System.out.print("Escolha uma opção: ");
+    }
+    public void mostrarGaleriaConquistas(PersonagemService ps) {
+        audio.tocarSom("sons/menu.wav");
+        System.out.println("\n========================================================");
+        System.out.println("                GALERIA DE CONQUISTAS");
+        System.out.println("========================================================");
+
+        imprimirConquista("ROTA_A", "O Homem Honesto (Desistiu do crime no início)", ps);
+        imprimirConquista("ROTA_B_MORTE", "A Queda (Morreu durante a emboscada na fuga)", ps);
+        imprimirConquista("ROTA_B_FUGA", "O Desaparecimento (Fugiu com identidades falsas)", ps);
+        imprimirConquista("ROTA_B_PRISAO", "Atrás das Grades (Sobreviveu com colete, mas foi preso)", ps);
+        imprimirConquista("ROTA_C_KAMIKAZE", "Reação em Cadeia (Explodiu o laboratório)", ps);
+        imprimirConquista("ROTA_C_RICINA", "O Toque Silencioso (Envenenou todos com Ricina)", ps);
+        imprimirConquista("ROTA_D_DELACAO", "O Acordo (Entregou o Cartel à polícia)", ps);
+
+        System.out.println("========================================================\n");
+        pausarParaLeitura();
+    }
+
+    private void imprimirConquista(String id, String descricao, PersonagemService ps) {
+        if (ps.possuiConquista(id)) {
+            System.out.println("[DESBLOQUEADO] \uD83C\uDFC6 " + descricao); // Mostra um troféu!
+        } else {
+            System.out.println("[BLOQUEADO]    ???");
+        }
     }
 
     public void mostrarInstrucoes() {
@@ -119,6 +145,14 @@ public class Dialogos {
 
         if (escolha == 0) return null;
         return saves.get(escolha - 1);
+    }
+    public int mostrarOpcoesDoSave(String nomeSave) {
+        System.out.println("\n=== OPÇÕES: " + nomeSave + " ===");
+        System.out.println("1 - Carregar Partida");
+        System.out.println("2 - Apagar Save");
+        System.out.println("0 - Voltar à Lista");
+        System.out.print("Sua escolha: ");
+        return lerOpcao(0, 2); // Aproveita o nosso validador para aceitar 0, 1 ou 2
     }
 
     // =========================================================================
@@ -266,16 +300,19 @@ public class Dialogos {
         System.out.println("Lá dentro, há uma mochila abarrotada de notas de dinheiro vivo e uma arma de fogo.");
         System.out.println("\nMARISA: — " + nome + "! O que é isso?! Dinheiro sujo? Uma arma?! Com quem você está se metendo?!");
         System.out.println("\nComo você lida com o flagrante?");
-        System.out.println("1 - Tentar manipular a situação, dizendo que é dinheiro de uma consultoria legal e que a arma é por segurança.");
-        System.out.println("2 - Desabar parcialmente, confessando que fez tudo pela família mas exigindo silêncio absoluto.");
+        System.out.println("1 - Tentar manipular a situação, dizendo que é dinheiro legal.");
+        System.out.println("2 - Desabar parcialmente, confessando e exigindo silêncio absoluto.");
+        System.out.println("3 - [COMPRAR ITEM] Ignorar as lágrimas, gastar R$ 5000 do fundo com um contato obscuro e encomendar um 'Colete Balístico' para a guerra inevitável.");
         System.out.print("Sua escolha: ");
     }
 
     public void mostrarCenaFundoFalsoParte2(int escolhaAnterior) {
         if (escolhaAnterior == 1) {
-            System.out.println("\nMarisa percebe que você está mentindo na cara dura. A confiança dela em você morre neste exato momento.");
-        } else {
-            System.out.println("\nEla chora copiosamente, horrorizada com o monstro em que você se transformou. O respeito sumiu.");
+            System.out.println("\nMarisa percebe que você está mentindo na cara dura. A confiança morre aqui.");
+        } else if (escolhaAnterior == 2) {
+            System.out.println("\nEla chora copiosamente, horrorizada com o monstro em que você se transformou.");
+        } else if (escolhaAnterior == 3) {
+            System.out.println("\nVocê veste o colete e tranca o dinheiro. Marisa arruma as malas e sai de casa aterrorizada.");
         }
     }
 
@@ -287,14 +324,17 @@ public class Dialogos {
         System.out.println("\nQual será o seu último passo antes do colapso?");
         System.out.println("1 - Tentar empacotar o que sobrou do dinheiro, comprar identidades falsas e fugir do país.");
         System.out.println("2 - Aceitar o fim, ficar para trás e armar um plano explosivo para destruir o cartel de vez.");
+        System.out.println("3 - [CRIAR ITEM] Reunir provas bancárias e rotas num 'Dossiê do Cartel' para tentar um acordo com a Polícia (NOVA ROTA D).");
         System.out.print("Sua escolha: ");
     }
 
     public void mostrarCenaEncruzilhadaParte2(int escolhaAnterior) {
         if (escolhaAnterior == 1) {
-            System.out.println("\nVocê corre contra o tempo para arrumar as malas. A rota da fuga está traçada, mas o perigo está na porta.");
-        } else {
-            System.out.println("\nVocê acende um cigarro com as mãos firmes. Não há mais fuga. É hora de acertar as contas.");
+            System.out.println("\nVocê corre contra o tempo para arrumar as malas. A rota da fuga está traçada.");
+        } else if (escolhaAnterior == 2) {
+            System.out.println("\nVocê acende um cigarro com as mãos firmes. Não há mais fuga. É hora da guerra.");
+        } else if (escolhaAnterior == 3) {
+            System.out.println("\nVocê passa a noite a imprimir documentos e liga para o telemóvel do seu cunhado Heitor.");
         }
     }
 
@@ -339,5 +379,44 @@ public class Dialogos {
         System.out.println("toca no maquinário perfeito, sorri e dá seu último suspiro antes da polícia chegar.");
         System.out.println("O dinheiro está seguro para Marisa e Enzo. Você venceu. Mas perdeu sua alma.");
         System.out.println("========================================================\n");
+    }
+    public void mostrarCenaPrisao() {
+        audio.tocarSom("sons/gameover.wav");
+        System.out.println("\n========================================================");
+        System.out.println("CAPÍTULO 10: Atrás das Grades (ROTA B - FINAL ALTERNATIVO)");
+        System.out.println("========================================================");
+        System.out.println("Os assassinos do Cartel invadiram a sua casa. O tiro que deveria ser fatal no seu");
+        System.out.println("abdômen foi parado pelo Colete Balístico que você comprou. Você sobreviveu à emboscada.");
+        System.out.println("Minutos depois, Heitor arromba a porta. Você é algemado no chão da sua própria sala.");
+        System.out.println("Sua família está segura, mas você passará o resto dos seus dias numa cela de segurança máxima.");
+        System.out.println("Você está vivo. Mas perdeu a sua liberdade para sempre.");
+        System.out.println("========================================================\n");
+    }
+
+    public void mostrarCenaDelacao() {
+        audio.tocarSom("sons/sucesso.wav");
+        System.out.println("\n========================================================");
+        System.out.println("CAPÍTULO 10: O Acordo (ROTA D - A DELAÇÃO)");
+        System.out.println("========================================================");
+        System.out.println("Você encontrou-se com Heitor e entregou o Dossiê do Cartel. Na mesma noite, a");
+        System.out.println("Polícia Federal desmantelou todo o império de 'O Fidalgo' através das suas provas.");
+        System.out.println("Você não é mais o poderoso Valter. Você e a sua família entraram no Programa de");
+        System.out.println("Proteção a Testemunhas. A viver no anonimato, sem dinheiro e a trabalhar como");
+        System.out.println("caixa num supermercado. A honra e o poder desapareceram. Mas todos sobreviveram.");
+        System.out.println("========================================================\n");
+    }
+    public boolean oferecerSaveManual() {
+        System.out.println("\n--- PONTO DE DESCANSO ---");
+        System.out.println("Deseja salvar o seu progresso atualizado agora?");
+        System.out.println("1 - Sim, salvar jogo");
+        System.out.println("2 - Não, continuar jornada");
+        System.out.print("Sua escolha: ");
+
+        int escolha = lerOpcao(1, 2);
+        if (escolha == 1) {
+            audio.tocarSom("sons/menu.wav"); // Feedback sonoro
+            return true;
+        }
+        return false;
     }
 }

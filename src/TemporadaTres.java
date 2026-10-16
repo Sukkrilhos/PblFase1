@@ -31,6 +31,12 @@ public class TemporadaTres {
         if (personagemService.isGameOver()) return true;
         dialogos.pausarParaLeitura();
 
+        if (dialogos.oferecerSaveManual()) {
+            personagemService.salvarProgressoManual(3); // Passa o número da Temporada atual (2)
+            dialogos.mostrarMensagem("\n[Progresso salvo manualmente com sucesso no seu slot!]");
+            dialogos.pausarParaLeitura();
+        }
+
         // --- CAPÍTULO 6: O Atacadista ---
         dialogos.mostrarCenaOAtacadistaParte1(valter.getNome());
         int escolhaAtacadista = dialogos.lerOpcao(1, 3);
@@ -52,4 +58,5 @@ public class TemporadaTres {
 
         return false;
     }
+
 }

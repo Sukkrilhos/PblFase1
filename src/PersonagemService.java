@@ -1,10 +1,11 @@
 public class PersonagemService {
     private GerenciadorDeSave gerenciadorDeSave;
-    private Personagem personagemAtual; // Mantém o personagem carregado na memória
+    private Personagem personagemAtual;
+    private GerenciadorDeConquistas conquistas; // NOVO
 
     public PersonagemService(GerenciadorDeSave gerenciadorDeSave) {
         this.gerenciadorDeSave = gerenciadorDeSave;
-        // O carregamento do save foi removido daqui, pois agora é o Controlador que escolhe qual ficheiro carregar.
+        this.conquistas = new GerenciadorDeConquistas(); // NOVO
     }
 
     public Personagem inicializarValter() {
@@ -55,5 +56,25 @@ public class PersonagemService {
 
     public boolean verificarItem(String item) {
         return this.personagemAtual != null && this.personagemAtual.possuiItem(item);
+    }
+    // ==========================================
+    // SISTEMA DE SAVE MANUAL
+    // ==========================================
+
+    public void salvarProgressoManual(int temporadaAtual) {
+        if (this.personagemAtual != null) {
+            Progresso progresso = new Progresso(this.personagemAtual, temporadaAtual);
+            gerenciadorDeSave.salvarJogo(progresso);
+        }
+    }
+    public void desbloquearConquista(String id) {
+        if (!conquistas.possuiConquista(id)) {
+            conquistas.registrarConquista(id);
+            System.out.println("\n*** CONQUISTA DESBLOQUEADA! Verifique a Galeria no Menu Principal. ***");
+        }
+    }
+
+    public boolean possuiConquista(String id) {
+        return conquistas.possuiConquista(id);
     }
 }
