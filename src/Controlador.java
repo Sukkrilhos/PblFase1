@@ -93,7 +93,7 @@ public class Controlador {
 
         Personagem jogador = personagemService.inicializarPersonagemCustomizado(nomePersonagem, opcaoAntecedente);
 
-        dialogos.mostrarMensagem("\nIniciando 'Reação em Cadeia' com " + jogador.getNome() + " [" + jogador.getAntecedente() + "]...");
+        dialogos.mostrarMensagem("\nIniciando 'PONTO ZERO' com " + jogador.getNome() + " [" + jogador.getAntecedente() + "]...");
         dialogos.pausarParaLeitura();
 
         // --- TEMPORADA 1 ---
@@ -213,14 +213,18 @@ public class Controlador {
 
     private void mostrarStatusAtual() {
         Personagem p = personagemService.getPersonagem();
-        dialogos.mostrarMensagem("\n========================");
-        dialogos.mostrarMensagem("   STATUS DE VALTER     ");
-        dialogos.mostrarMensagem("========================");
+        dialogos.mostrarMensagem("\n=======================================");
+
+
+        dialogos.mostrarMensagem("          STATUS DE " + p.getNome().toUpperCase());
+
+        dialogos.mostrarMensagem("=======================================");
         dialogos.mostrarMensagem("Dinheiro: R$ " + p.getDinheiro());
         dialogos.mostrarMensagem("Saúde: " + p.getSaude() + "%");
         dialogos.mostrarMensagem("Moral/Ética: " + p.getMoralEtica() + "%");
         dialogos.mostrarMensagem("Relação Familiar: " + p.getRelacaoFamiliar() + "%");
-        dialogos.mostrarMensagem("========================\n");
+        dialogos.mostrarMensagem("=======================================\n");
+
         dialogos.pausarParaLeitura();
     }
 
