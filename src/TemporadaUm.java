@@ -49,9 +49,13 @@ public class TemporadaUm {
         if (escolhaPrincipal == 1) {
             // REGISTO DA CONQUISTA DA ROTA A
             personagemService.desbloquearConquista("ROTA_A");
-            dialogos.mostrarDesfechoRotaA();
+
+            // Passe o nome dinâmico aqui!
+            dialogos.mostrarDesfechoRotaA(valter.getNome());
+
             dialogos.pausarParaLeitura();
             return true;
+
         } else {
             dialogos.mostrarMensagem("\nROTA B/C INICIADA: Você aceitou a proposta de Kadu.");
             personagemService.aplicarConsequencia(5000, 0, -30, 0);

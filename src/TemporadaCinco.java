@@ -17,7 +17,7 @@ public class TemporadaCinco {
             // --- ROTA B: A QUEDA OU O DESAPARECIMENTO ---
             if (personagemService.verificarItem("Passaportes Falsos")) {
                 personagemService.desbloquearConquista("ROTA_B_FUGA"); // CONQUISTA
-                dialogos.mostrarCenaFugaSucesso();
+                dialogos.mostrarCenaFugaSucesso(valter.getNome());
                 dialogos.mostrarMensagem("\n[FIM DA ROTA B (SUCESSO): Fuga perfeita. Você usou os seus itens com maestria!]");
             } else if (personagemService.verificarItem("Colete Balístico")) {
                 personagemService.desbloquearConquista("ROTA_B_PRISAO"); // CONQUISTA

@@ -87,7 +87,8 @@ public class GerenciadorDeSave {
     public List<Progresso> listarSaves() {
         List<Progresso> saves = new ArrayList<>();
         File pasta = new File(DIRETORIO_SAVES);
-        File[] arquivos = pasta.listFiles((dir, nome) -> nome.toLowerCase().endsWith(".json"));
+        File[] arquivos = pasta.listFiles((dir, nome) ->
+                nome.toLowerCase().endsWith(".json") && !nome.equalsIgnoreCase("conquistas.json"));
 
         if (arquivos != null) {
             for (File arquivo : arquivos) {
@@ -96,8 +97,8 @@ public class GerenciadorDeSave {
                     if (p != null) {
                         saves.add(p);
                     }
-                } catch (IOException e) {
-                    // Ignora ficheiros corrompidos
+                } catch (Exception e) {
+                    // Ignora ficheiros corrompidos ou mal formatados sem quebrar o programa
                 }
             }
         }

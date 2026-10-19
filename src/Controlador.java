@@ -22,16 +22,26 @@ public class Controlador {
             opcao = dialogos.lerInteiroSeguro();
 
             switch (opcao) {
-                case 1: tentarIniciarJogo(); break;
-                case 2: tentarCarregarJogo(); break;
-                case 3: dialogos.mostrarInstrucoes(); break;
-                case 4: dialogos.mostrarCreditos(); break;
+                case 1: tentarIniciarJogo();
+                break;
 
-                case 5: // NOVA OPÇÃO
+                case 2:
+                    tentarCarregarJogo();
+                    break;
+
+                case 3:
+                    dialogos.mostrarInstrucoes();
+                    break;
+
+                case 4:
+                    dialogos.mostrarCreditos();
+                    break;
+
+                case 5:
                     dialogos.mostrarGaleriaConquistas(personagemService);
                     break;
 
-                case 6: // PASSOU A SER 6
+                case 6:
                     dialogos.mostrarMensagem("Encerrando o sistema. Até a próxima!");
                     limparTela();
                     break;
@@ -77,30 +87,36 @@ public class Controlador {
     }
 
     private void iniciarJogo() {
-        Personagem valter = personagemService.inicializarValter();
-        dialogos.mostrarMensagem("\nIniciando 'Reação em Cadeia'...");
+        // Fluxo de Personalização
+        String nomePersonagem = dialogos.pedirNomePersonagem();
+        int opcaoAntecedente = dialogos.escolherAntecedente();
+
+        Personagem jogador = personagemService.inicializarPersonagemCustomizado(nomePersonagem, opcaoAntecedente);
+
+        dialogos.mostrarMensagem("\nIniciando 'Reação em Cadeia' com " + jogador.getNome() + " [" + jogador.getAntecedente() + "]...");
+        dialogos.pausarParaLeitura();
 
         // --- TEMPORADA 1 ---
         TemporadaUm temporadaUm = new TemporadaUm(dialogos, personagemService);
-        if (temporadaUm.executarTemporada(valter) || gerenciadorDeSessao.lidarComGameOver(personagemService)) return;
+        if (temporadaUm.executarTemporada(jogador) || gerenciadorDeSessao.lidarComGameOver(personagemService)) return;
         mostrarStatusAtual();
         salvarProgressoAutomatico(1);
 
         // --- TEMPORADA 2 ---
         TemporadaDois temporadaDois = new TemporadaDois(dialogos, personagemService);
-        if (temporadaDois.executarTemporada(valter) || gerenciadorDeSessao.lidarComGameOver(personagemService)) return;
+        if (temporadaDois.executarTemporada(jogador) || gerenciadorDeSessao.lidarComGameOver(personagemService)) return;
         mostrarStatusAtual();
         salvarProgressoAutomatico(2);
 
         // --- TEMPORADA 3 ---
         TemporadaTres temporadaTres = new TemporadaTres(dialogos, personagemService);
-        if (temporadaTres.executarTemporada(valter) || gerenciadorDeSessao.lidarComGameOver(personagemService)) return;
+        if (temporadaTres.executarTemporada(jogador) || gerenciadorDeSessao.lidarComGameOver(personagemService)) return;
         mostrarStatusAtual();
         salvarProgressoAutomatico(3);
 
         // --- TEMPORADA 4 ---
         TemporadaQuatro temporadaQuatro = new TemporadaQuatro(dialogos, personagemService);
-        int escolhaRotaFinal = temporadaQuatro.executarTemporada(valter);
+        int escolhaRotaFinal = temporadaQuatro.executarTemporada(jogador);
 
         if (gerenciadorDeSessao.lidarComGameOver(personagemService)) return;
         mostrarStatusAtual();
@@ -108,9 +124,8 @@ public class Controlador {
 
         // --- TEMPORADA 5 (DESFECHO FINAL) ---
         TemporadaCinco temporadaCinco = new TemporadaCinco(dialogos, personagemService);
-        temporadaCinco.executarTemporada(valter, escolhaRotaFinal);
+        temporadaCinco.executarTemporada(jogador, escolhaRotaFinal);
 
-        // Chama a gestão de fim de campanha
         gerenciadorDeSessao.lidarComFimDeCampanha();
     }
 

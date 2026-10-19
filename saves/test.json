@@ -1,14 +1,16 @@
 {
   "personagem": {
-    "nome": "Valter Branco",
-    "idade": 50,
-    "dinheiro": 0,
-    "saude": 100,
-    "moralEtica": 90,
-    "relacaoFamiliar": 90,
-    "inventario": []
+    "nome": "Valter",
+    "antecedente": "Químico Precavido",
+    "dinheiro": 12500,
+    "saude": 45,
+    "moralEtica": 25,
+    "relacaoFamiliar": 35,
+    "inventario": [
+      "Máscara de Gás"
+    ]
   },
-  "temporadaAtual": 1,
+  "temporadaAtual": 4,
   "nomeSave": "test",
-  "dataHora": "16/10/2026 02:28:31"
+  "dataHora": "19/10/2026 13:39:19"
 }

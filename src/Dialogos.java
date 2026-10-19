@@ -21,6 +21,28 @@ public class Dialogos {
         System.out.println("6. Sair");
         System.out.print("Escolha uma opção: ");
     }
+    public String pedirNomePersonagem() {
+        System.out.println("\n========================================================");
+        System.out.println("             PERSONALIZAÇÃO DO PROTAGONISTA");
+        System.out.println("========================================================");
+        System.out.print("Digite o nome do protagonista (Pressione Enter para 'Valter'): ");
+
+        String entrada = scanner.nextLine().trim();
+        if (entrada.isEmpty()) {
+            entrada = "Valter";
+        }
+        audio.tocarSom("sons/menu.wav");
+        return entrada;
+    }
+
+    public int escolherAntecedente() {
+        System.out.println("\nEscolha a Origem / Perfil de " + "origem do seu personagem:");
+        System.out.println("1 - Professor Tradicional (Equilibrado: Status Padrão)");
+        System.out.println("2 - Ex-Químico Industrial (Começa com R$ 3.000 extras, mas -10 Moral)");
+        System.out.println("3 - Químico Precavido (Começa com o item 'Máscara de Gás' no inventário)");
+        System.out.print("Sua escolha: ");
+        return lerOpcao(1, 3);
+    }
     public void mostrarGaleriaConquistas(PersonagemService ps) {
         audio.tocarSom("sons/menu.wav");
         System.out.println("\n========================================================");
@@ -201,12 +223,12 @@ public class Dialogos {
         System.out.print("Sua escolha: ");
     }
 
-    public void mostrarDesfechoRotaA() {
+    public void mostrarDesfechoRotaA(String nome) {
         System.out.println("\n========================================================");
         System.out.println("CAPÍTULO FINAL: O Homem Honesto (ROTA A)");
         System.out.println("========================================================");
         System.out.println("Você olhou nos olhos de Kadu e balançou a cabeça. O crime não era o seu caminho.");
-        System.out.println("Valter Branco continuou dando aulas de química e fazendo bicos para pagar as contas.");
+        System.out.println(nome + " continuou dando aulas de química e fazendo bicos para pagar as contas.");
         System.out.println("Infelizmente, o câncer avançou implacavelmente e as dívidas engoliram sua família.");
         System.out.println("Você morreu pobre, mas com a consciência limpa. Marisa e Enzo nunca souberam do que você quase se tornou.");
         System.out.println("========================================================\n");
@@ -274,9 +296,6 @@ public class Dialogos {
         System.out.print("Sua escolha: ");
     }
 
-    public void mostrarCenaNovoEsconderijoParte2(int escolhaAnterior) {
-    }
-
     public void mostrarCenaOAtacadistaParte1(String nome) {
         System.out.println("\n=== CAPÍTULO 6: O Atacadista ===");
         System.out.println("Um distribuidor conhecido como 'O Fidalgo' exige uma cota de 50 quilos por semana.");
@@ -287,8 +306,6 @@ public class Dialogos {
         System.out.print("Sua escolha: ");
     }
 
-    public void mostrarCenaOAtacadistaParte2(int escolhaAnterior) {
-    }
 
     // =========================================================================
     // TEMPORADA 4: DIÁLOGOS E INTERAÇÕES
@@ -355,13 +372,13 @@ public class Dialogos {
         System.out.println("========================================================\n");
     }
 
-    public void mostrarCenaFugaSucesso() {
+    public void mostrarCenaFugaSucesso(String nome) {
         audio.tocarSom("sons/sucesso.wav"); // Efeito sonoro de vitória
         System.out.println("\n========================================================");
         System.out.println("CAPÍTULO 10: O Desaparecimento (ROTA B - FINAL SECRETO)");
         System.out.println("========================================================");
         System.out.println("Quando os assassinos do Cartel invadiram a sua casa, você já não estava lá.");
-        System.out.println("Graças aos Passaportes Falsos que comprou, Valter, Marisa e Enzo cruzaram a fronteira.");
+        System.out.println("Graças aos Passaportes Falsos que comprou,"+nome+", Marisa e Enzo cruzaram a fronteira.");
         System.out.println("Heitor encontrou apenas uma casa vazia. O seu império ruiu, mas a sua família sobreviveu,");
         System.out.println("escondida numa praia isolada da América Central, a viver do dinheiro que restou.");
         System.out.println("Você perdeu o poder, mas salvou a sua vida.");

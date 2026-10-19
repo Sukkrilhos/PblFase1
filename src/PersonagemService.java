@@ -8,8 +8,27 @@ public class PersonagemService {
         this.conquistas = new GerenciadorDeConquistas(); // NOVO
     }
 
-    public Personagem inicializarValter() {
+    public Personagem inicializarPersonagemCustomizado(String nome, int opcaoAntecedente) {
         this.personagemAtual = new Personagem();
+        this.personagemAtual.setNome(nome);
+
+        switch (opcaoAntecedente) {
+            case 1:
+                this.personagemAtual.setAntecedente("Professor Tradicional");
+                break;
+
+            case 2:
+                this.personagemAtual.setAntecedente("Ex-Químico Industrial");
+                this.personagemAtual.alterarDinheiro(3000);
+                this.personagemAtual.alterarMoral(-10);
+                break;
+
+            case 3:
+                this.personagemAtual.setAntecedente("Químico Precavido");
+                this.personagemAtual.adicionarItem("Máscara de Gás");
+                break;
+        }
+
         gerenciadorDeSave.atualizarPersonagem(this.personagemAtual);
         return this.personagemAtual;
     }
